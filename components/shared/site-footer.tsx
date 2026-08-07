@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {  Phone, Mail, MapPin, Truck, ShieldCheck, RotateCcw } from "lucide-react";
+import {Phone, Mail, MapPin, Truck, ShieldCheck, RotateCcw } from "lucide-react";
 import { siteConfig, navConfig } from "@/config/site";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";

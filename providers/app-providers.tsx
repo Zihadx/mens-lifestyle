@@ -3,12 +3,18 @@
 import { useState, type ReactNode } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "next-themes";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { store, persistor } from "@/store/index";
 
-export function AppProviders({ children }: { children: ReactNode }) {
+export function AppProviders({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -26,10 +32,13 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-            {children}
-            <Toaster position="top-center" richColors closeButton />
-          </ThemeProvider>
+          {children}
+
+          <Toaster
+            position="top-center"
+            richColors
+            closeButton
+          />
         </QueryClientProvider>
       </PersistGate>
     </ReduxProvider>

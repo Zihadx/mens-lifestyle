@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {Phone, Mail, MapPin, Truck, ShieldCheck, RotateCcw } from "lucide-react";
+import { Home, Phone, Mail, MapPin, Truck, ShieldCheck, RotateCcw } from "lucide-react";
 import { siteConfig, navConfig } from "@/config/site";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -55,10 +55,10 @@ export function SiteFooter() {
           <p className="max-w-xs text-sm text-muted-foreground">{siteConfig.description}</p>
           <div className="flex gap-3">
             <a href={siteConfig.socials.facebook} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground">
-              {/* <Facebook className="size-4" /> */}
+              <Home className="size-4" />
             </a>
             <a href={siteConfig.socials.instagram} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground">
-              {/* <Instagram className="size-4" /> */}
+              <Home className="size-4" />
             </a>
           </div>
         </div>

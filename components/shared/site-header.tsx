@@ -16,11 +16,14 @@ import { useAppDispatch } from "@/store/hooks";
 import { setMobileNavOpen, setSearchOpen } from "@/store/slices/ui-slice";
 import { useCart } from "@/hooks/use-cart";
 import { useWishlist } from "@/hooks/use-wishlist";
+import { useSession, useLogout } from "@/features/auth/hooks/use-auth";
 
 export function SiteHeader() {
   const dispatch = useAppDispatch();
   const { itemCount, openDrawer: openCart } = useCart();
   const { count: wishlistCount } = useWishlist();
+  const { isAuthenticated, user } = useSession();
+  const logout = useLogout();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -70,7 +73,7 @@ export function SiteHeader() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{isAuthenticated ? user!.name : "My Account"}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href="/account">Profile</Link>
@@ -85,9 +88,15 @@ export function SiteHeader() {
                 <Link href="/wishlist">Wishlist</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/login">Sign In</Link>
-              </DropdownMenuItem>
+              {isAuthenticated ? (
+                <DropdownMenuItem onClick={logout} destructive>
+                  Sign Out
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem asChild>
+                  <Link href="/login">Sign In</Link>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { User, Package, MapPin, Heart, Settings, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLogout } from "@/features/auth/hooks/use-auth";
 
 const NAV_ITEMS = [
   { label: "Overview", href: "/account", icon: User },
@@ -15,6 +16,8 @@ const NAV_ITEMS = [
 
 export function AccountNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const logout = useLogout();
 
   return (
     <nav className="space-y-1">
@@ -34,7 +37,13 @@ export function AccountNav() {
           </Link>
         );
       })}
-      <button className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground">
+      <button
+        onClick={() => {
+          logout();
+          router.push("/");
+        }}
+        className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
+      >
         <LogOut className="size-4" />
         Sign Out
       </button>

@@ -1,0 +1,84 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircle2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { AuthShell } from "@/features/auth/components/auth-shell";
+import { OtpVerifyStep } from "@/features/auth/components/otp-verify-step";
+import { otpRequestSchema, type OtpRequestFormValues } from "@/schemas/auth.schema";
+import { useRequestOtp } from "@/features/auth/hooks/use-auth";
+
+export default function ForgotPasswordPage() {
+  const requestOtp = useRequestOtp();
+  const [phone, setPhone] = useState<string | null>(null);
+  const [isDone, setIsDone] = useState(false);
+
+  const form = useForm<OtpRequestFormValues>({
+    resolver: zodResolver(otpRequestSchema),
+    defaultValues: { phone: "" },
+  });
+
+  function onSubmit(values: OtpRequestFormValues) {
+    requestOtp.mutate(values.phone, { onSuccess: () => setPhone(values.phone) });
+  }
+
+  if (isDone) {
+    return (
+      <AuthShell title="Password Reset">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <CheckCircle2 className="size-10 text-success" />
+          <p className="text-sm text-muted-foreground">Your password has been reset. You can now sign in.</p>
+          <Button asChild className="mt-2 w-full">
+            <Link href="/login">Back to Sign In</Link>
+          </Button>
+        </div>
+      </AuthShell>
+    );
+  }
+
+  if (phone) {
+    return (
+      <AuthShell title="Verify It's You">
+        <OtpVerifyStep phone={phone} onBack={() => setPhone(null)} onVerified={() => setIsDone(true)} />
+      </AuthShell>
+    );
+  }
+
+  return (
+    <AuthShell
+      title="Forgot Password"
+      description="Enter your phone number and we'll send a verification code."
+      footer={
+        <Link href="/login" className="font-medium text-accent hover:underline">
+          Back to Sign In
+        </Link>
+      }
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <FormControl>
+                  <Input placeholder="01712345678" inputMode="tel" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full" loading={requestOtp.isPending}>
+            Send Code
+          </Button>
+        </form>
+      </Form>
+    </AuthShell>
+  );
+}

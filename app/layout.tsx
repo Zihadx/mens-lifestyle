@@ -6,20 +6,20 @@ import "./globals.css";
 
 const fontDisplay = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-display-family",
   display: "swap",
 });
 
 const fontSans = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-sans-family",
   display: "swap",
 });
 
 const fontBangla = Hind_Siliguri({
   subsets: ["bengali", "latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-bangla",
+  variable: "--font-bangla-family",
   display: "swap",
 });
 
@@ -48,8 +48,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${fontDisplay.variable} ${fontSans.variable} ${fontBangla.variable} font-sans`}>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning className={`${fontDisplay.variable} ${fontSans.variable} ${fontBangla.variable} font-sans`}>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

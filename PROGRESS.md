@@ -1,43 +1,183 @@
-# Build Progress
+# 🚀 Project Development Progress
 
-Legend: ✅ done · 🚧 in progress · ⬜ not started
+> A structured roadmap tracking the development journey from foundation to production-ready ecommerce platform.
 
-- [x] 01 — Project Foundation (Next.js, TS strict, Tailwind tokens, Redux+Persist, TanStack Query, folder architecture, env template)
-- [ ] 02 — Design System (buttons, inputs, cards, dialogs, tables, skeletons, dark mode)
-- [ ] 03 — Global Store (cart, wishlist, recently-viewed, checkout, UI, session slices)
-- [ ] 04 — Mock Data + Service Layer (products, categories, customers, orders, inventory, payments, reviews, coupons, courier, analytics, users, notifications)
-- [ ] 05 — Global Layout (header, nav, mobile nav, footer, search, cart drawer)
-- [ ] 06 — Homepage
-- [ ] 07 — Product Discovery (shop, filters, sort, search, pagination)
-- [ ] 08 — Product Detail Page
-- [ ] 09 — Cart
-- [ ] 10 — Checkout (one-page)
-- [ ] 11 — Order Success
-- [ ] 12 — Order Tracking
-- [ ] 13 — Customer Account
-- [ ] 14 — Auth + RBAC
-- [ ] 15 — Admin Dashboard Foundation
-- [ ] 16 — Order Management (admin)
-- [ ] 17 — Product Management (admin)
-- [ ] 18 — Inventory Management (admin)
-- [ ] 19 — Customer Management (admin)
-- [ ] 20 — Courier Management (admin)
-- [ ] 21 — Payment Management (admin)
-- [ ] 22 — Marketing System (admin)
-- [ ] 23 — Ad Landing Page System
-- [ ] 24 — Analytics Dashboard
-- [ ] 25 — Meta + GA Tracking Architecture
-- [ ] 26 — Reviews + Social Proof
-- [ ] 27 — Content + Store Settings (admin)
-- [ ] 28 — SEO + Performance
-- [ ] 29 — QA + Responsiveness + Polish
-- [ ] 30 — Final Production Readiness
+## Status Legend
 
-## Notes for continuation
+- ✅ Completed
+- 🚧 In Progress
+- ⬜ Planned
 
-- Brand name is a placeholder (`VERO`) — swap in `config/site.ts`.
-- Primary product focus: men's fashion (categories seeded accordingly in
-  Milestone 04's mock data — extend `config/site.ts` → `navConfig.categories`
-  for women's/kids' if the catalog expands).
-- No backend, database, payment, courier, Meta, or GA credentials required —
-  everything runs on mock data until those are deliberately wired in.
+---
+
+# 📌 Development Roadmap
+
+## Phase 01 — Foundation & Architecture
+
+- ✅ **01 — Project Foundation**
+  - Next.js setup
+  - TypeScript strict mode
+  - Tailwind CSS design tokens
+  - Redux Toolkit + Persist
+  - TanStack Query integration
+  - Scalable folder architecture
+  - Environment configuration template
+
+---
+
+## Phase 02 — Design System & UI Foundation
+
+- ⬜ **02 — Design System**
+  - Reusable buttons
+  - Form inputs
+  - Cards & product components
+  - Dialogs / modals
+  - Tables
+  - Skeleton loaders
+  - Theme system & dark mode support
+
+---
+
+## Phase 03 — State Management & Core Store
+
+- ⬜ **03 — Global Store**
+  - Cart management
+  - Wishlist system
+  - Recently viewed products
+  - Checkout state
+  - UI state management
+  - User session handling
+
+---
+
+## Phase 04 — Data Layer & Service Architecture
+
+- ⬜ **04 — Mock Data + Service Layer**
+  - Product services
+  - Category services
+  - Customer data
+  - Order system
+  - Inventory management
+  - Payment services
+  - Reviews
+  - Coupons
+  - Courier integration structure
+  - Analytics data
+  - Users & notifications
+
+---
+
+# 🛒 Customer Store Experience
+
+## Phase 05 — Global Storefront Layout
+
+- ⬜ **05 — Global Layout**
+  - Header
+  - Navigation
+  - Mobile navigation
+  - Footer
+  - Search experience
+  - Cart drawer
+
+---
+
+## Phase 06 — Shopping Experience
+
+- ⬜ **06 — Homepage**
+
+- ⬜ **07 — Product Discovery**
+  - Product listing
+  - Filters
+  - Sorting
+  - Search
+  - Pagination
+
+- ⬜ **08 — Product Detail Page**
+
+- ⬜ **09 — Shopping Cart**
+
+- ⬜ **10 — One Page Checkout**
+
+- ⬜ **11 — Order Success Experience**
+
+- ⬜ **12 — Order Tracking**
+
+---
+
+# 👤 Customer Account & Security
+
+- ⬜ **13 — Customer Account**
+  - Profile
+  - Orders
+  - Wishlist
+  - Settings
+
+- ⬜ **14 — Authentication + RBAC**
+  - User authentication
+  - Role-based access control
+  - Protected routes
+
+---
+
+# 🏢 Admin Dashboard System
+
+## Phase 07 — Business Management
+
+- ⬜ **15 — Admin Dashboard Foundation**
+
+- ⬜ **16 — Order Management**
+
+- ⬜ **17 — Product Management**
+
+- ⬜ **18 — Inventory Management**
+
+- ⬜ **19 — Customer Management**
+
+- ⬜ **20 — Courier Management**
+
+- ⬜ **21 — Payment Management**
+
+- ⬜ **22 — Marketing Management**
+
+---
+
+# 📈 Growth & Analytics Features
+
+- ⬜ **23 — Advertisement Landing Page System**
+
+- ⬜ **24 — Analytics Dashboard**
+
+- ⬜ **25 — Meta Pixel + Google Analytics Architecture**
+
+- ⬜ **26 — Reviews & Social Proof System**
+
+- ⬜ **27 — Content Management + Store Settings**
+
+---
+
+# ⚡ Optimization & Production
+
+- ⬜ **28 — SEO + Performance Optimization**
+  - Metadata
+  - Structured data
+  - Image optimization
+  - Core Web Vitals
+
+- ⬜ **29 — QA + Responsive Polish**
+  - Cross-device testing
+  - UI refinement
+  - Bug fixing
+
+- ⬜ **30 — Production Readiness**
+  - Final review
+  - Deployment preparation
+  - Documentation
+  - Environment setup
+
+---
+
+# 📝 Project Notes
+
+## Brand Configuration
+
+The current brand name is a placeholder:

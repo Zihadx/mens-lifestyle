@@ -118,14 +118,4 @@ export const mockProductService: ProductService = {
 // backend exists — every consumer imports from here, never from mock/api directly.
 export const productService: ProductService = mockProductService;
 
-export const categoryService = {
-  list() {
-    return categories;
-  },
-
-  getBySlug(slug: string) {
-    return categories.find((category) => category.slug === slug) ?? null;
-  },
-};
-
 export { categories };

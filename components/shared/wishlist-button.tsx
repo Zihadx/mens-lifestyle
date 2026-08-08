@@ -31,7 +31,7 @@ export function WishlistButton({ product, className }: WishlistButtonProps) {
       aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
       aria-pressed={wishlisted}
       className={cn(
-        "flex size-8 items-center justify-center rounded-full bg-background/90 shadow-sm backdrop-blur transition-colors hover:bg-background",
+        "flex size-8 items-center justify-center rounded-full bg-background/90 shadow-xs backdrop-blur transition-colors hover:bg-background",
         className
       )}
     >

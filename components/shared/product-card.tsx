@@ -93,7 +93,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <button
               onClick={handleQuickAdd}
               disabled={stockStatus === "out-of-stock"}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-background/95 py-2 text-xs font-medium shadow-sm backdrop-blur transition-colors hover:bg-background disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-background/95 py-2 text-xs font-medium shadow-xs backdrop-blur transition-colors hover:bg-background disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Plus className="size-3.5" /> Quick Add
             </button>
@@ -104,7 +104,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 dispatch(openQuickView(product.id));
               }}
               aria-label="Quick view"
-              className="flex size-9 items-center justify-center rounded-md bg-background/95 shadow-sm backdrop-blur transition-colors hover:bg-background"
+              className="flex size-9 items-center justify-center rounded-md bg-background/95 shadow-xs backdrop-blur transition-colors hover:bg-background"
             >
               <Eye className="size-3.5" />
             </button>

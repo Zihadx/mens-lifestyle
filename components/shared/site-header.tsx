@@ -79,6 +79,9 @@ export function SiteHeader() {
                 <Link href="/account/orders">My Orders</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
+                <Link href="/track">Track Order</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href="/wishlist">Wishlist</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { productService, categoryService, type ProductQuery } from "@/features/product/services/product.service";
+import { productService, type ProductQuery } from "@/features/product/services/product.service";
 import { queryKeys } from "@/lib/query-keys";
+import { categoryService } from "../services/category.service";
 
 export function useProducts(query: ProductQuery) {
   return useQuery({

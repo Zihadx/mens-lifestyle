@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Home, Phone, Mail, MapPin, Truck, ShieldCheck, RotateCcw } from "lucide-react";
+import { Facebook, Instagram, Phone, Mail, MapPin, Truck, ShieldCheck, RotateCcw } from "lucide-react";
 import { siteConfig, navConfig } from "@/config/site";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 const FOOTER_LINKS = {
   shop: navConfig.main,
   customerService: [
-    { label: "Track Order", href: "/account/orders" },
+    { label: "Track Order", href: "/track" },
     { label: "Delivery Information", href: "/delivery-info" },
     { label: "Return & Exchange", href: "/returns" },
     { label: "FAQ", href: "/faq" },
@@ -55,10 +55,10 @@ export function SiteFooter() {
           <p className="max-w-xs text-sm text-muted-foreground">{siteConfig.description}</p>
           <div className="flex gap-3">
             <a href={siteConfig.socials.facebook} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground">
-              <Home className="size-4" />
+              <Facebook className="size-4" />
             </a>
             <a href={siteConfig.socials.instagram} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground">
-              <Home className="size-4" />
+              <Instagram className="size-4" />
             </a>
           </div>
         </div>

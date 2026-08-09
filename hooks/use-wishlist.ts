@@ -7,6 +7,7 @@ import {
   selectWishlistCount,
 } from "@/store/slices/wishlist-slice";
 import type { RootState } from "@/store/index";
+import { trackEvent } from "@/lib/analytics/track";
 
 export function useWishlist() {
   const dispatch = useAppDispatch();
@@ -21,7 +22,13 @@ export function useWishlist() {
     items,
     count,
     isWishlisted,
-    toggle: (item: Parameters<typeof toggleWishlistItem>[0]) => dispatch(toggleWishlistItem(item)),
+    toggle: (item: Parameters<typeof toggleWishlistItem>[0]) => {
+      const wasWishlisted = isWishlisted(item.productId);
+      dispatch(toggleWishlistItem(item));
+      if (!wasWishlisted) {
+        trackEvent("AddToWishlist", { value: item.price, contentIds: [item.productId], contentName: item.name, contentType: "product" });
+      }
+    },
     remove: (productId: string) => dispatch(removeFromWishlist({ productId })),
     clear: () => dispatch(clearWishlist()),
   };

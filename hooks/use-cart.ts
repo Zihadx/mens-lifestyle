@@ -15,6 +15,7 @@ import {
   selectCartSubtotal,
 } from "@/store/slices/cart-slice";
 import { calculateOrderTotal, getDeliveryCharge, type DeliveryZone } from "@/lib/business-logic";
+import { trackEvent } from "@/lib/analytics/track";
 import type { CartItem } from "@/types/cart";
 
 export function useCart() {
@@ -39,7 +40,16 @@ export function useCart() {
     itemCount,
     subtotal,
     getTotals,
-    addItem: (item: CartItem) => dispatch(addItem(item)),
+    addItem: (item: CartItem) => {
+      dispatch(addItem(item));
+      trackEvent("AddToCart", {
+        value: item.price * item.quantity,
+        contentIds: [item.productId],
+        contentName: item.name,
+        contentType: "product",
+        numItems: item.quantity,
+      });
+    },
     removeItem: (lineId: string) => dispatch(removeItem({ lineId })),
     updateQuantity: (lineId: string, quantity: number) => dispatch(updateQuantity({ lineId, quantity })),
     applyCoupon: (couponPayload: NonNullable<typeof coupon>) => dispatch(applyCoupon(couponPayload)),

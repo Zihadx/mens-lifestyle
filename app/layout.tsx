@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, Hind_Siliguri } from "next/font/google";
 import { AppProviders } from "@/providers/app-providers";
+import { AnalyticsScripts } from "@/components/analytics/analytics-scripts";
+import { PageViewTracker } from "@/components/analytics/page-view-tracker";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -50,6 +52,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${fontDisplay.variable} ${fontSans.variable} ${fontBangla.variable} font-sans`}>
+        <AnalyticsScripts />
+        <PageViewTracker />
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

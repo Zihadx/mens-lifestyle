@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +20,7 @@ import { OrderSummary } from "@/features/cart/components/order-summary";
 import { checkoutSchema, type CheckoutFormValues } from "@/schemas/checkout.schema";
 import { useCart } from "@/hooks/use-cart";
 import { useCreateOrder } from "@/features/order/hooks/use-orders";
+import { trackEvent } from "@/lib/analytics/track";
 import { getDeliveryCharge, getDeliveryEstimate, calculateOrderTotal, type DeliveryZone } from "@/lib/business-logic";
 import { formatBDT } from "@/lib/utils";
 import { DISTRICTS } from "@/data/customers";
@@ -53,6 +54,20 @@ export function CheckoutForm() {
     [zone, subtotal, coupon]
   );
 
+  // InitiateCheckout fires once per checkout session, when there's actually
+  // something to check out — not on an empty cart that bounces straight to
+  // the empty state below.
+  useEffect(() => {
+    if (items.length > 0) {
+      trackEvent("InitiateCheckout", {
+        value: subtotal,
+        contentIds: items.map((i) => i.productId),
+        numItems: items.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (items.length === 0) {
     return (
       <div className="container py-16">
@@ -73,6 +88,8 @@ export function CheckoutForm() {
   function onSubmit(values: CheckoutFormValues) {
     const discount = coupon?.discountAmount ?? 0;
     const total = calculateOrderTotal({ subtotal, discount, deliveryCharge });
+
+    trackEvent("AddPaymentInfo", { value: total, contentIds: items.map((i) => i.productId) });
 
     createOrder.mutate(
       {

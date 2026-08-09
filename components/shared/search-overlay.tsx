@@ -12,6 +12,7 @@ import { selectUI, setSearchOpen } from "@/store/slices/ui-slice";
 import { productService } from "@/features/product/services/product.service";
 import type { Product } from "@/types/product";
 import { formatBDT } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics/track";
 
 const TRENDING_SEARCHES = ["Panjabi", "Oxford Shirt", "Chino Trousers", "Bomber Jacket", "Polo"];
 
@@ -44,6 +45,7 @@ export function SearchOverlay() {
 
   function goToResults() {
     if (!term.trim()) return;
+    trackEvent("Search", { searchString: term.trim() });
     router.push(`/shop?search=${encodeURIComponent(term)}`);
     close();
   }

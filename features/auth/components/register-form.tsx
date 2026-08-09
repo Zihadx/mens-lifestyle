@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { registerSchema, type RegisterFormValues } from "@/schemas/auth.schema";
 import { useRegister } from "@/features/auth/hooks/use-auth";
+import { trackEvent } from "@/lib/analytics/track";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export function RegisterForm() {
   function onSubmit(values: RegisterFormValues) {
     register.mutate(values, {
       onSuccess: () => {
+        trackEvent("CompleteRegistration");
         toast.success("Account created");
         router.push("/account");
       },

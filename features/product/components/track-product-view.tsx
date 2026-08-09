@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import { trackProductView } from "@/store/slices/recently-viewed-slice";
+import { trackEvent } from "@/lib/analytics/track";
 import type { Product } from "@/types/product";
 
 export function TrackProductView({ product }: { product: Product }) {
@@ -18,6 +19,13 @@ export function TrackProductView({ product }: { product: Product }) {
         price: product.price,
       })
     );
+    trackEvent("ViewContent", {
+      value: product.price,
+      contentIds: [product.id],
+      contentName: product.name,
+      contentCategory: product.categorySlug,
+      contentType: "product",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id]);
 

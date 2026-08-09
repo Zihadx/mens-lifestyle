@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, Package, Truck, Wallet } from "lucide-react";
@@ -13,10 +13,24 @@ import { useOrder } from "@/features/order/hooks/use-orders";
 import { getDeliveryEstimate } from "@/lib/business-logic";
 import { formatBDT, formatDate } from "@/lib/utils";
 import { PAYMENT_METHOD_LABELS } from "@/features/checkout/constants";
+import { trackEvent } from "@/lib/analytics/track";
 
 export default function OrderSuccessPage({ params }: { params: Promise<{ orderId: string }> }) {
   const { orderId } = use(params);
   const { data: order, isLoading, isError, refetch } = useOrder(orderId);
+  const hasTrackedPurchase = useRef(false);
+
+  useEffect(() => {
+    if (order && !hasTrackedPurchase.current) {
+      hasTrackedPurchase.current = true;
+      trackEvent("Purchase", {
+        value: order.total,
+        orderId: order.id,
+        contentIds: order.items.map((i) => i.productId),
+        numItems: order.items.reduce((sum, i) => sum + i.quantity, 0),
+      });
+    }
+  }, [order]);
 
   if (isLoading) return <PageSkeleton />;
   if (isError || !order) {

@@ -36,6 +36,7 @@ export interface ProductService {
   duplicate(id: string): Promise<Product>;
   remove(id: string): Promise<void>;
   setStatus(id: string, status: ProductStatus): Promise<Product>;
+  adjustVariantStock(productId: string, variantId: string, quantityChange: number): Promise<Product>;
 }
 
 const LATENCY_MS = 350;
@@ -190,6 +191,16 @@ export const mockProductService: ProductService = {
     const product = productStore.find((p) => p.id === id);
     if (!product) throw new ServiceError(`Product ${id} not found`, "not-found");
     product.status = status;
+    return product;
+  },
+
+  async adjustVariantStock(productId, variantId, quantityChange) {
+    await sleep(300);
+    const product = productStore.find((p) => p.id === productId);
+    if (!product) throw new ServiceError(`Product ${productId} not found`, "not-found");
+    const variant = product.variants.find((v) => v.id === variantId);
+    if (!variant) throw new ServiceError(`Variant ${variantId} not found`, "not-found");
+    variant.stock = Math.max(0, variant.stock + quantityChange);
     return product;
   },
 };

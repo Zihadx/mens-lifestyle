@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { productService, categoryService, type ProductQuery, type CreateProductInput, type UpdateProductInput } from "@/features/product/services/product.service";
+import { productService, type ProductQuery, type CreateProductInput, type UpdateProductInput } from "@/features/product/services/product.service";
 import { queryKeys } from "@/lib/query-keys";
 import type { ProductStatus } from "@/types/product";
+import { categoryService } from "../services/category.service";
 
 export function useProducts(query: ProductQuery) {
   return useQuery({

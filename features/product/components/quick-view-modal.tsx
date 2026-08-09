@@ -37,7 +37,7 @@ export function QuickViewModal() {
         <div className="grid max-h-[85vh] grid-cols-1 gap-6 overflow-y-auto p-6 sm:grid-cols-2">
           {!product ? (
             <>
-              <Skeleton className="aspect-[3/4] w-full rounded-lg" />
+              <Skeleton className="aspect-3/4 w-full rounded-lg" />
               <div className="space-y-3">
                 <Skeleton className="h-6 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />

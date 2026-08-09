@@ -36,6 +36,7 @@ export interface OrderService {
   create(input: CreateOrderInput): Promise<Order>;
   updateStatus(id: string, status: OrderStatus, note?: string): Promise<Order>;
   cancel(id: string, reason: string): Promise<Order>;
+  refund(id: string, reason: string): Promise<Order>;
 }
 
 // In-memory mutable copy so create/update actions feel real within a session
@@ -138,6 +139,19 @@ export const mockOrderService: OrderService = {
     order.status = "cancelled";
     order.updatedAt = new Date().toISOString();
     order.timeline.push({ status: "cancelled", label: getOrderStatusLabel("cancelled"), timestamp: order.updatedAt, note: reason });
+    return order;
+  },
+
+  async refund(id, reason) {
+    await sleep(400);
+    const order = orderStore.find((o) => o.id === id);
+    if (!order) throw new ServiceError(`Order ${id} not found`, "not-found");
+    if (order.paymentStatus !== "paid" && order.paymentStatus !== "cod-collected") {
+      throw new ServiceError("Only paid or COD-collected orders can be refunded", "validation");
+    }
+    order.paymentStatus = "refunded";
+    order.updatedAt = new Date().toISOString();
+    order.timeline.push({ status: order.status, label: `Refund issued`, timestamp: order.updatedAt, note: reason });
     return order;
   },
 };

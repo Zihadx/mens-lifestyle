@@ -58,3 +58,14 @@ export function useCancelOrder() {
     },
   });
 }
+
+export function useRefundOrder() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => orderService.refund(id, reason),
+    onSuccess: (order) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders.detail(order.id) });
+    },
+  });
+}

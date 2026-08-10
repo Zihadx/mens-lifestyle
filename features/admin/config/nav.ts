@@ -14,6 +14,7 @@ import {
   BarChart3,
   UserCog,
   Settings,
+  FileText,
 } from "lucide-react";
 import type { UserRole } from "@/store/slices/session-slice";
 
@@ -39,5 +40,6 @@ export const adminNavItems: AdminNavItem[] = [
   { label: "Reviews", href: "/admin/reviews", icon: Star, allow: ["admin", "moderator"] },
   { label: "Analytics", href: "/admin/analytics", icon: BarChart3, allow: ["admin"] },
   { label: "Users", href: "/admin/users", icon: UserCog, allow: ["admin"] },
+  { label: "Content", href: "/admin/content", icon: FileText, allow: ["admin"] },
   { label: "Settings", href: "/admin/settings", icon: Settings, allow: ["admin"] },
 ];

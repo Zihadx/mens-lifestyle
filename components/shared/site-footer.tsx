@@ -2,8 +2,7 @@ import Link from "next/link";
 import { Home, Phone, Mail, MapPin, Truck, ShieldCheck, RotateCcw } from "lucide-react";
 import { siteConfig, navConfig } from "@/config/site";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { NewsletterForm } from "@/components/shared/newsletter-form";
 
 const FOOTER_LINKS = {
   shop: navConfig.main,
@@ -88,12 +87,7 @@ export function SiteFooter() {
           <div className="w-full max-w-xs space-y-2">
             <p className="text-sm font-medium">Join the list</p>
             <p className="text-xs text-muted-foreground">New arrivals and offers, no spam.</p>
-            <form className="flex gap-2">
-              <Input type="email" placeholder="Your email" className="h-10" />
-              <Button type="submit" size="sm" className="shrink-0">
-                Subscribe
-              </Button>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
       </div>

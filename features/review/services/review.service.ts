@@ -13,8 +13,10 @@ export interface SubmitReviewInput {
 export interface ReviewService {
   getByProductId(productId: string): Promise<Review[]>;
   listForModeration(): Promise<Review[]>;
+  listAll(): Promise<Review[]>;
   submit(input: SubmitReviewInput): Promise<Review>;
   moderate(id: string, status: Review["status"]): Promise<Review>;
+  report(id: string): Promise<Review>;
 }
 
 const reviewStore: Review[] = [...reviews];
@@ -28,6 +30,11 @@ export const mockReviewService: ReviewService = {
   async listForModeration() {
     await sleep(300);
     return reviewStore.filter((r) => r.status !== "published");
+  },
+
+  async listAll() {
+    await sleep(300);
+    return [...reviewStore].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
   async submit(input) {
@@ -53,6 +60,14 @@ export const mockReviewService: ReviewService = {
     const review = reviewStore.find((r) => r.id === id);
     if (!review) throw new Error(`Review ${id} not found`);
     review.status = status;
+    return review;
+  },
+
+  async report(id) {
+    await sleep(250);
+    const review = reviewStore.find((r) => r.id === id);
+    if (!review) throw new Error(`Review ${id} not found`);
+    review.status = "reported";
     return review;
   },
 };

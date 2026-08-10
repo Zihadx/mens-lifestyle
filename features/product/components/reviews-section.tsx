@@ -5,14 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { MessageSquareText, Star, ThumbsUp } from "lucide-react";
+import { MessageSquareText, Star, ThumbsUp, Flag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RatingStars } from "@/components/shared/rating-stars";
 import { EmptyState } from "@/components/shared/empty-state";
-import { useProductReviews, useSubmitReview } from "@/features/review/hooks/use-reviews";
+import { useProductReviews, useSubmitReview, useReportReview } from "@/features/review/hooks/use-reviews";
 import { formatDate, cn } from "@/lib/utils";
 
 const reviewSchema = z.object({
@@ -27,6 +27,7 @@ type ReviewFormValues = z.infer<typeof reviewSchema>;
 export function ReviewsSection({ productId, ratingAverage, ratingCount }: { productId: string; ratingAverage: number; ratingCount: number }) {
   const { data: reviews, isLoading } = useProductReviews(productId);
   const submitReview = useSubmitReview();
+  const reportReview = useReportReview();
   const [showForm, setShowForm] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -183,6 +184,16 @@ export function ReviewsSection({ productId, ratingAverage, ratingCount }: { prod
                 {review.isVerifiedPurchase && <span className="text-accent">Verified Purchase</span>}
                 <button className="flex items-center gap-1 hover:text-foreground">
                   <ThumbsUp className="size-3" /> Helpful ({review.helpfulCount})
+                </button>
+                <button
+                  className="flex items-center gap-1 hover:text-destructive"
+                  onClick={() =>
+                    reportReview.mutate(review.id, {
+                      onSuccess: () => toast.success("Thanks — we'll take a look at this review."),
+                    })
+                  }
+                >
+                  <Flag className="size-3" /> Report
                 </button>
               </div>
             </div>

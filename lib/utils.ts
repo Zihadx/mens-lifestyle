@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { formatDistanceToNow } from "date-fns";
 
 /**
  * Merge Tailwind class names safely, resolving conflicting utility classes.
@@ -28,6 +29,16 @@ export function formatDate(date: Date | string, opts?: Intl.DateTimeFormatOption
     year: "numeric",
     ...opts,
   }).format(d);
+}
+
+/**
+ * "4 minutes ago" style relative time — used for recent activity feeds
+ * (notifications, stock activity log) where a relative timestamp is more
+ * useful than an absolute date for anything that just happened.
+ */
+export function formatRelativeTime(date: Date | string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return formatDistanceToNow(d, { addSuffix: true });
 }
 
 /**

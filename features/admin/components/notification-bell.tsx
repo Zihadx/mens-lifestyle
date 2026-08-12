@@ -12,8 +12,7 @@ import {
 import { EmptyState } from "@/components/shared/empty-state";
 import { notificationService } from "@/features/notification/services/notification.service";
 import { queryKeys } from "@/lib/query-keys";
-import { formatDate } from "@/lib/utils";
-import { cn } from "@/lib/utils";
+import { formatRelativeTime, cn } from "@/lib/utils";
 
 const CATEGORY_DOT: Record<string, string> = {
   orders: "bg-accent",
@@ -75,7 +74,7 @@ export function NotificationBell() {
                 <div className="flex-1">
                   <p className="text-xs font-medium">{n.title}</p>
                   <p className="text-xs text-muted-foreground">{n.message}</p>
-                  <p className="mt-0.5 text-[10px] text-muted-foreground">{formatDate(n.createdAt, { hour: "2-digit", minute: "2-digit" })}</p>
+                  <p className="mt-0.5 text-[10px] text-muted-foreground">{formatRelativeTime(n.createdAt)}</p>
                 </div>
               </div>
             ))

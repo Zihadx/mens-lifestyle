@@ -6,6 +6,7 @@ import { FlashSaleSection } from "@/components/home/flash-sale-section";
 import { TrustSection } from "@/components/home/trust-section";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { InstagramSection } from "@/components/home/instagram-section";
+import { FadeIn } from "@/components/shared/fade-in";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -16,29 +17,40 @@ export default function HomePage() {
     <>
       <HeroSection />
       <TrustSection />
-      <CategoryGridSection />
 
-      <ProductCollectionSection
-        eyebrow="Just landed"
-        title="New Arrivals"
-        description="Fresh cuts and fabrics, added weekly."
-        query={{ collection: "new-arrivals", sort: "newest" }}
-        viewAllHref="/shop/new-arrivals"
-      />
+      <FadeIn>
+        <CategoryGridSection />
+      </FadeIn>
+
+      <FadeIn>
+        <ProductCollectionSection
+          eyebrow="Just landed"
+          title="New Arrivals"
+          description="Fresh cuts and fabrics, added weekly."
+          query={{ collection: "new-arrivals", sort: "newest" }}
+          viewAllHref="/shop/new-arrivals"
+        />
+      </FadeIn>
 
       <FlashSaleSection />
 
-      <ProductCollectionSection
-        eyebrow="Customer favorites"
-        title="Best Sellers"
-        description="The pieces people keep coming back for."
-        query={{ collection: "best-sellers", sort: "popularity" }}
-        viewAllHref="/shop/best-sellers"
-        className="bg-secondary/20"
-      />
+      <FadeIn>
+        <ProductCollectionSection
+          eyebrow="Customer favorites"
+          title="Best Sellers"
+          description="The pieces people keep coming back for."
+          query={{ collection: "best-sellers", sort: "popularity" }}
+          viewAllHref="/shop/best-sellers"
+          className="bg-secondary/20"
+        />
+      </FadeIn>
 
-      <TestimonialsSection />
-      <InstagramSection />
+      <FadeIn>
+        <TestimonialsSection />
+      </FadeIn>
+      <FadeIn>
+        <InstagramSection />
+      </FadeIn>
     </>
   );
 }

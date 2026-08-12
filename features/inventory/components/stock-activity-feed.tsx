@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, Boxes } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/shared/empty-state";
-import { formatDate } from "@/lib/utils";
+import { formatRelativeTime } from "@/lib/utils";
 import type { StockActivity } from "@/types/misc";
 
 export function StockActivityFeed({ activity }: { activity: StockActivity[] }) {
@@ -32,7 +32,7 @@ export function StockActivityFeed({ activity }: { activity: StockActivity[] }) {
                   </span>
                 </p>
                 <p className="text-xs text-muted-foreground">{entry.reason}</p>
-                <p className="text-xs text-muted-foreground">{formatDate(entry.createdAt, { hour: "2-digit", minute: "2-digit" })}</p>
+                <p className="text-xs text-muted-foreground">{formatRelativeTime(entry.createdAt)}</p>
               </div>
             </div>
           ))

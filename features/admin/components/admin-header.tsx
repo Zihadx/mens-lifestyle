@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { Menu, Moon, Search, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,10 +15,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NotificationBell } from "@/features/admin/components/notification-bell";
-import { CommandMenu } from "@/features/admin/components/command-menu";
 import { AdminMobileSidebar } from "@/features/admin/components/admin-mobile-sidebar";
 import { useSession, useLogout } from "@/features/auth/hooks/use-auth";
 import { useRouter } from "next/navigation";
+
+// cmdk (the command palette library) only matters once someone presses ⌘K —
+// it doesn't need to be in the initial admin bundle.
+const CommandMenu = dynamic(() => import("@/features/admin/components/command-menu").then((m) => m.CommandMenu), { ssr: false });
 
 export function AdminHeader() {
   const { user } = useSession();

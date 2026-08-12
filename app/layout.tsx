@@ -49,9 +49,25 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
+    sameAs: [siteConfig.socials.facebook, siteConfig.socials.instagram],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: siteConfig.supportPhone,
+      contactType: "customer service",
+      areaServed: "BD",
+    },
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${fontDisplay.variable} ${fontSans.variable} ${fontBangla.variable} font-sans`}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         <AnalyticsScripts />
         <PageViewTracker />
         <AppProviders>{children}</AppProviders>

@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { store, persistor } from "@/store/index";
+import { PreviewAutoSession } from "@/components/shared/preview-auto-session";
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -29,6 +30,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             {children}
             <Toaster position="top-center" richColors closeButton />
+            <PreviewAutoSession />
           </ThemeProvider>
         </QueryClientProvider>
       </PersistGate>

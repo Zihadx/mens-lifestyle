@@ -17,6 +17,7 @@ import {
 import { NotificationBell } from "@/features/admin/components/notification-bell";
 import { AdminMobileSidebar } from "@/features/admin/components/admin-mobile-sidebar";
 import { useSession, useLogout } from "@/features/auth/hooks/use-auth";
+import { usePreviewRole } from "@/features/auth/hooks/use-preview-role";
 import { useRouter } from "next/navigation";
 
 // cmdk (the command palette library) only matters once someone presses ⌘K —
@@ -26,6 +27,7 @@ const CommandMenu = dynamic(() => import("@/features/admin/components/command-me
 export function AdminHeader() {
   const { user } = useSession();
   const logout = useLogout();
+  const switchToPreviewRole = usePreviewRole();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -70,6 +72,15 @@ export function AdminHeader() {
               <DropdownMenuItem asChild>
                 <a href="/">View Storefront</a>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                Preview: switch view
+              </DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("admin")}>Admin View</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("staff")}>Staff View</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("moderator")}>Moderator View</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("customer")}>User View</DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 destructive
                 onClick={() => {

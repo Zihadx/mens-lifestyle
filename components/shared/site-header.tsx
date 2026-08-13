@@ -18,6 +18,7 @@ import { setMobileNavOpen, setSearchOpen } from "@/store/slices/ui-slice";
 import { useCart } from "@/hooks/use-cart";
 import { useWishlist } from "@/hooks/use-wishlist";
 import { useSession, useLogout } from "@/features/auth/hooks/use-auth";
+import { usePreviewRole } from "@/features/auth/hooks/use-preview-role";
 
 export function SiteHeader() {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ export function SiteHeader() {
   const { count: wishlistCount } = useWishlist();
   const { isAuthenticated, user } = useSession();
   const logout = useLogout();
+  const switchToPreviewRole = usePreviewRole();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -88,6 +90,14 @@ export function SiteHeader() {
               <DropdownMenuItem asChild>
                 <Link href="/wishlist">Wishlist</Link>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                Preview: switch view
+              </DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("customer")}>User View</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("admin")}>Admin View</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("staff")}>Staff View</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchToPreviewRole("moderator")}>Moderator View</DropdownMenuItem>
               <DropdownMenuSeparator />
               {isAuthenticated ? (
                 <DropdownMenuItem onClick={logout} destructive>

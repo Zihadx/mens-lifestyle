@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, Search, Heart, User, ShoppingBag } from "lucide-react";
+import { Menu, Search, Heart, User, ShoppingBag, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,6 +29,9 @@ export function SiteHeader() {
   const { isAuthenticated, user } = useSession();
   const logout = useLogout();
   const switchToPreviewRole = usePreviewRole();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -56,6 +61,16 @@ export function SiteHeader() {
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" onClick={() => dispatch(setSearchOpen(true))} aria-label="Search">
             <Search className="size-[18px]" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label="Toggle theme"
+            className="hidden sm:inline-flex"
+          >
+            {mounted && theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
           </Button>
 
           <Button variant="ghost" size="icon" asChild className="relative hidden sm:inline-flex">

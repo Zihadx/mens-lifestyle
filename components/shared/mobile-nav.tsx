@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { User, Heart, Package, Phone } from "lucide-react";
+import { User, Heart, Package, Phone, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { navConfig, siteConfig } from "@/config/site";
@@ -11,6 +13,9 @@ import { selectUI, setMobileNavOpen } from "@/store/slices/ui-slice";
 export function MobileNav() {
   const dispatch = useAppDispatch();
   const { isMobileNavOpen } = useAppSelector(selectUI);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   function close() {
     dispatch(setMobileNavOpen(false));
@@ -76,7 +81,14 @@ export function MobileNav() {
           </ul>
         </nav>
 
-        <div className="border-t border-border p-5">
+        <div className="border-t border-border p-5 space-y-4">
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="flex w-full items-center gap-2.5 text-sm font-medium"
+          >
+            {mounted && theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            {mounted && theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </button>
           <a href={`tel:${siteConfig.supportPhone}`} className="flex items-center gap-2.5 text-sm text-muted-foreground">
             <Phone className="size-4" /> {siteConfig.supportPhone}
           </a>

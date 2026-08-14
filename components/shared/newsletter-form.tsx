@@ -31,7 +31,7 @@ export function NewsletterForm() {
         required
         className="h-10"
       />
-      <Button type="submit" size="sm" className="shrink-0" loading={isSubmitting}>
+      <Button type="submit" size="sm" className="shrink-0 h-10" loading={isSubmitting}>
         Subscribe
       </Button>
     </form>

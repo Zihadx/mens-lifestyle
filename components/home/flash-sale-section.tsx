@@ -122,7 +122,7 @@ export function FlashSaleSection() {
             <Button
               asChild
               size="lg"
-              className="group/button mt-7 h-11 rounded-none border border-white/20 bg-white px-5 text-xs font-semibold text-brass-700 shadow-none transition-all duration-300 hover:bg-white/90"
+              className="group/button mt-7 h-11 bg-white/10 text-white hover:bg-white/20"
             >
               <Link href="/shop/offers">
                 <span>Shop the Sale</span>

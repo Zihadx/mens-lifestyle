@@ -44,59 +44,194 @@ export function TrustSection() {
   return (
     <section className="border-y border-border bg-background">
       <div className="container">
-        {/* Below lg: horizontal snap strip — a partial next item shows through
-            a right-edge fade, inviting a swipe instead of cramming a 2-col grid. */}
+        {/* =========================================================
+            MOBILE
+            1 column — maximum readability
+            ========================================================= */}
+
         <ul
           role="list"
-          className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 py-6 mask-[linear-gradient(to_right,black_88%,transparent)] scrollbar-none [&::-webkit-scrollbar]:hidden lg:hidden"
+          className="divide-y divide-border sm:hidden"
         >
-          {TRUST_ITEMS.map(({ icon: Icon, title, description }, i) => (
-            <li
-              key={title}
-              className={`flex w-[68%] shrink-0 snap-start items-start gap-3 pr-6 sm:w-[40%] ${
-                i !== 0 ? "border-l border-border pl-6" : ""
-              }`}
-            >
-              <Icon
-                className="mt-0.5 size-4.5 shrink-0 text-accent"
-                strokeWidth={1.5}
-              />
-              <div>
-                <p className="text-sm font-medium">{title}</p>
-                <p className="mt-0.5 text-xs leading-snug text-muted-foreground">
-                  {description}
-                </p>
-              </div>
-            </li>
-          ))}
+          {TRUST_ITEMS.map(
+            ({ icon: Icon, title, description }, index) => (
+              <li
+                key={title}
+                className="group flex min-h-25 items-center gap-4 py-5"
+              >
+                {/* Icon */}
+                <div className="flex size-10 shrink-0 items-center justify-center">
+                  <Icon
+                    className="size-5 text-foreground/50 transition-colors duration-300 group-hover:text-accent"
+                    strokeWidth={1.5}
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-sm font-medium tracking-tight text-foreground">
+                      {title}
+                    </p>
+
+                    <span className="shrink-0 font-mono text-[9px] tracking-[0.15em] text-muted-foreground/35">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <p className="mt-1 max-w-md text-xs leading-5 text-muted-foreground">
+                    {description}
+                  </p>
+                </div>
+              </li>
+            ),
+          )}
         </ul>
 
-        {/* lg and up: one settled row, hairline dividers instead of six
-            identical icon-circle cards. Icons stay quiet until hovered —
-            the accent color reads as a response, not a decoration. */}
+        {/* =========================================================
+            SMALL TABLET
+            2 columns
+            ========================================================= */}
+
+        <ul
+          role="list"
+          className="hidden sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y sm:divide-border md:hidden"
+        >
+          {TRUST_ITEMS.map(
+            ({ icon: Icon, title, description }, index) => (
+              <li
+                key={title}
+                className={[
+                  "group flex min-h-35 flex-col justify-between",
+                  "px-5 py-6",
+                  index % 2 === 0 ? "sm:pl-0" : "",
+                  index < 2 ? "pt-0" : "",
+                  index >= 4 ? "pb-0" : "",
+                ].join(" ")}
+              >
+                {/* Top */}
+                <div className="flex items-center justify-between">
+                  <Icon
+                    className="size-5 text-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-accent"
+                    strokeWidth={1.5}
+                  />
+
+                  <span className="font-mono text-[9px] tracking-[0.18em] text-muted-foreground/35">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="mt-6">
+                  <p className="text-[13px] font-medium tracking-tight text-foreground">
+                    {title}
+                  </p>
+
+                  <p className="mt-1.5 max-w-sm text-xs leading-5 text-muted-foreground">
+                    {description}
+                  </p>
+                </div>
+              </li>
+            ),
+          )}
+        </ul>
+
+        {/* =========================================================
+            TABLET
+            3 columns
+            ========================================================= */}
+
+        <ul
+          role="list"
+          className="hidden md:grid md:grid-cols-3 md:divide-x md:divide-y md:divide-border lg:hidden"
+        >
+          {TRUST_ITEMS.map(
+            ({ icon: Icon, title, description }, index) => (
+              <li
+                key={title}
+                className={[
+                  "group flex min-h-40 flex-col justify-between",
+                  "px-6 py-7",
+                  index % 3 === 0 ? "md:pl-0" : "",
+                  index % 3 === 2 ? "md:pr-0" : "",
+                  index < 3 ? "md:pt-0" : "",
+                  index >= 3 ? "md:pb-0" : "",
+                ].join(" ")}
+              >
+                {/* Top */}
+                <div className="flex items-center justify-between">
+                  <Icon
+                    className="size-5 text-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-accent"
+                    strokeWidth={1.5}
+                  />
+
+                  <span className="font-mono text-[9px] tracking-[0.18em] text-muted-foreground/35">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="mt-8">
+                  <p className="text-[13px] font-medium tracking-tight text-foreground">
+                    {title}
+                  </p>
+
+                  <p className="mt-1.5 max-w-xs text-xs leading-5 text-muted-foreground">
+                    {description}
+                  </p>
+                </div>
+              </li>
+            ),
+          )}
+        </ul>
+
+        {/* =========================================================
+            DESKTOP
+            6-column editorial layout
+            ========================================================= */}
+
         <ul
           role="list"
           className="hidden lg:grid lg:grid-cols-6 lg:divide-x lg:divide-border"
         >
-          {TRUST_ITEMS.map(({ icon: Icon, title, description }) => (
-            <li
-              key={title}
-              className="group flex flex-col gap-3 px-6 py-8 first:pl-0 last:pr-0"
-            >
-              <Icon
-                className="size-4.5 text-foreground/60 transition-colors duration-300 group-hover:text-accent"
-                strokeWidth={1.5}
-              />
-              <div>
-                <p className="text-[13px] font-medium tracking-tight">
-                  {title}
-                </p>
-                <p className="mt-1 text-xs leading-snug text-muted-foreground">
-                  {description}
-                </p>
-              </div>
-            </li>
-          ))}
+          {TRUST_ITEMS.map(
+            ({ icon: Icon, title, description }, index) => (
+              <li
+                key={title}
+                className={[
+                  "group relative flex min-h-40 flex-col justify-between",
+                  "px-6 py-8",
+                  "transition-colors duration-300",
+                  "hover:bg-secondary/30",
+                  index === 0 ? "lg:pl-0" : "",
+                  index === TRUST_ITEMS.length - 1 ? "lg:pr-0" : "",
+                ].join(" ")}
+              >
+                {/* Top */}
+                <div className="flex items-center justify-between">
+                  <Icon
+                    className="size-5 text-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-accent"
+                    strokeWidth={1.5}
+                  />
+
+                  <span className="font-mono text-[9px] tracking-[0.18em] text-muted-foreground/35">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="mt-8">
+                  <p className="text-[13px] font-medium tracking-tight text-foreground">
+                    {title}
+                  </p>
+
+                  <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+                    {description}
+                  </p>
+                </div>
+              </li>
+            ),
+          )}
         </ul>
       </div>
     </section>

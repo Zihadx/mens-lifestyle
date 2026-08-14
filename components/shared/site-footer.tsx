@@ -43,19 +43,7 @@ const TRUST_BADGES = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-secondary/40">
-      <div className="container grid grid-cols-1 gap-8 border-b border-border py-8 sm:grid-cols-3">
-        {TRUST_BADGES.map(({ icon: Icon, label, description }) => (
-          <div key={label} className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-background">
-              <Icon className="size-5 text-accent" strokeWidth={1.5} />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{label}</p>
-              <p className="text-xs text-muted-foreground">{description}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+     
 
       <div className="container grid grid-cols-2 gap-8 py-12 sm:grid-cols-3 lg:grid-cols-6">
         <div className="col-span-2 space-y-4 lg:col-span-2">

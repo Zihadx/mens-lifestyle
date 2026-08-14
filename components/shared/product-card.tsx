@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, Plus } from "lucide-react";
+import { ArrowUpRight, Eye, Plus } from "lucide-react";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { RatingStars } from "@/components/shared/rating-stars";
 import { ProductBadge } from "@/components/shared/product-badge";
@@ -20,19 +20,30 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+
   const dispatch = useAppDispatch();
   const { addItem } = useCart();
 
   const primaryImage = product.images[0]?.url;
   const hoverImage = product.images[1]?.url ?? primaryImage;
-  const totalAvailable = product.variants.reduce((sum, v) => sum + (v.stock - v.reservedStock), 0);
+
+  const totalAvailable = product.variants.reduce(
+    (sum, v) => sum + (v.stock - v.reservedStock),
+    0,
+  );
+
   const stockStatus = getStockStatus(totalAvailable);
 
   function handleQuickAdd(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    const variant = product.variants.find((v) => v.stock - v.reservedStock > 0);
+
+    const variant = product.variants.find(
+      (v) => v.stock - v.reservedStock > 0,
+    );
+
     if (!variant) return;
+
     addItem({
       lineId: `${product.id}:${variant.id}`,
       productId: product.id,
@@ -49,80 +60,179 @@ export function ProductCard({ product }: ProductCardProps) {
     });
   }
 
+  function handleQuickView(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(openQuickView(product.id));
+  }
+
+  const hasSale =
+    product.compareAtPrice && product.compareAtPrice > product.price;
+
   return (
-    <div
+    <article
       className="group relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={`/products/${product.slug}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-secondary">
+      <Link
+        href={`/products/${product.slug}`}
+        className="block outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4"
+      >
+        {/* Product visual */}
+        <div className="relative aspect-3/4 overflow-hidden bg-secondary">
           {primaryImage && (
             <>
+              {/* Primary image */}
               <Image
                 src={primaryImage}
                 alt={product.images[0]?.alt ?? product.name}
                 fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className={`object-cover transition-opacity duration-500 ${isHovered && hoverImage !== primaryImage ? "opacity-0" : "opacity-100"}`}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className={`object-cover transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${
+                  isHovered && hoverImage !== primaryImage
+                    ? "scale-[1.025] opacity-0"
+                    : "scale-100 opacity-100"
+                }`}
               />
-              {hoverImage && (
+
+              {/* Secondary image */}
+              {hoverImage && hoverImage !== primaryImage && (
                 <Image
                   src={hoverImage}
                   alt={product.images[1]?.alt ?? product.name}
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                  className={`object-cover transition-opacity duration-500 ${isHovered ? "opacity-100" : "opacity-0"}`}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  className={`object-cover transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${
+                    isHovered
+                      ? "scale-100 opacity-100"
+                      : "scale-[1.025] opacity-0"
+                  }`}
                 />
               )}
             </>
           )}
 
-          {/* Badges */}
-          <div className="absolute left-2 top-2 flex flex-col gap-1.5">
-            {product.isNewArrival && <ProductBadge type="new" />}
-            {product.isBestSeller && <ProductBadge type="best-seller" />}
-            {product.compareAtPrice && product.compareAtPrice > product.price && <ProductBadge type="sale" />}
-            {stockStatus === "low-stock" && <ProductBadge type="limited" />}
+          {/* Soft editorial vignette */}
+          <div
+            className={`pointer-events-none absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-black/5 transition-opacity duration-500 ${
+              isHovered ? "opacity-100" : "opacity-60"
+            }`}
+          />
+
+          {/* Top information */}
+          <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3.5 sm:p-4">
+            {/* Badges */}
+            <div className="flex flex-wrap gap-1.5">
+              {product.isNewArrival && (
+                <ProductBadge type="new" />
+              )}
+
+              {!product.isNewArrival && product.isBestSeller && (
+                <ProductBadge type="best-seller" />
+              )}
+
+              {hasSale && <ProductBadge type="sale" />}
+
+              {stockStatus === "low-stock" && (
+                <ProductBadge type="limited" />
+              )}
+            </div>
+
+            {/* Wishlist */}
+            <div
+              className={`transition-transform duration-300 ${
+                isHovered ? "translate-y-0" : "translate-y-0.5"
+              }`}
+            >
+              <WishlistButton
+                product={product}
+                className="bg-background/90 shadow-none backdrop-blur-md transition-all duration-300 hover:bg-background"
+              />
+            </div>
           </div>
 
-          <WishlistButton product={product} className="absolute right-2 top-2" />
+          {/* Bottom interaction layer */}
+          <div
+            className={`absolute inset-x-3 bottom-3 transition-all duration-500 ease-out sm:inset-x-4 sm:bottom-4 ${
+              isHovered
+                ? "translate-y-0 opacity-100"
+                : "translate-y-3 opacity-0"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleQuickAdd}
+                disabled={stockStatus === "out-of-stock"}
+                className="group/add flex h-10 flex-1 items-center justify-center gap-2 bg-background px-4 text-xs font-semibold tracking-wide text-foreground shadow-sm transition-all duration-300 hover:bg-foreground hover:text-background disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Plus className="size-3.5 transition-transform duration-300 group-hover/add:rotate-90" />
+                <span>Quick Add</span>
+              </button>
 
-          {/* Hover actions */}
-          <div className="absolute inset-x-2 bottom-2 flex gap-1.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <button
-              onClick={handleQuickAdd}
-              disabled={stockStatus === "out-of-stock"}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-background/95 py-2 text-xs font-medium shadow-xs backdrop-blur transition-colors hover:bg-background disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Plus className="size-3.5" /> Quick Add
-            </button>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dispatch(openQuickView(product.id));
-              }}
-              aria-label="Quick view"
-              className="flex size-9 items-center justify-center rounded-md bg-background/95 shadow-xs backdrop-blur transition-colors hover:bg-background"
-            >
-              <Eye className="size-3.5" />
-            </button>
+              <button
+                onClick={handleQuickView}
+                aria-label={`Quick view ${product.name}`}
+                className="flex size-10 items-center justify-center bg-background/95 text-foreground shadow-sm backdrop-blur-md transition-all duration-300 hover:bg-foreground hover:text-background"
+              >
+                <Eye className="size-4" strokeWidth={1.6} />
+              </button>
+            </div>
           </div>
 
+          {/* Out of stock */}
           {stockStatus === "out-of-stock" && (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/70">
-              <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Out of Stock</span>
+            <div className="absolute inset-0 flex items-center justify-center bg-background/65 backdrop-blur-[1px]">
+              <span className="border border-border bg-background/95 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground">
+                Out of Stock
+              </span>
             </div>
           )}
+
+          {/* Minimal hover frame */}
+          <div
+            className={`pointer-events-none absolute inset-0 ring-1 ring-inset transition-all duration-500 ${
+              isHovered
+                ? "ring-white/30"
+                : "ring-black/5"
+            }`}
+          />
         </div>
 
-        <div className="mt-3 space-y-1">
-          <p className="line-clamp-1 text-sm font-medium">{product.name}</p>
-          <RatingStars rating={product.rating.average} reviewCount={product.rating.count} />
-          <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} />
+        {/* Product information */}
+        <div className="pt-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h3 className="line-clamp-1 text-[13px] font-medium tracking-[-0.005em] text-foreground sm:text-sm">
+                {product.name}
+              </h3>
+
+              <div className="mt-1.5 flex items-center gap-2">
+                <RatingStars
+                  rating={product.rating.average}
+                  reviewCount={product.rating.count}
+                />
+              </div>
+            </div>
+
+            <ArrowUpRight
+              className={`mt-0.5 size-4 shrink-0 text-muted-foreground transition-all duration-300 ${
+                isHovered
+                  ? "translate-x-0.5 -translate-y-0.5 text-foreground opacity-100"
+                  : "translate-x-0 translate-y-0 opacity-0"
+              }`}
+              strokeWidth={1.5}
+            />
+          </div>
+
+          <div className="mt-2.5">
+            <PriceDisplay
+              price={product.price}
+              compareAtPrice={product.compareAtPrice}
+            />
+          </div>
         </div>
       </Link>
-    </div>
+    </article>
   );
 }

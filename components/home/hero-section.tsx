@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type TouchEvent,
+} from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
@@ -38,7 +44,8 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "with you.",
     description:
       "Wool-blend overcoats and blazers, cut close through the shoulder and roomy enough to layer through Dhaka's cool spell.",
-    image: "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=1800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=1800&auto=format&fit=crop",
     primaryCta: { label: "Shop Outerwear", href: "/shop/category/jackets" },
     secondaryCta: { label: "View Lookbook", href: "/shop" },
   },
@@ -50,7 +57,8 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "always.",
     description:
       "Breathable cottons and linens finished with mother-of-pearl buttons — built to survive a Dhaka afternoon, not just look good in it.",
-    image: "https://images.unsplash.com/photo-1603394151492-5e9b974b090b?q=80&w=1800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1603394151492-5e9b974b090b?q=80&w=1800&auto=format&fit=crop",
     primaryCta: { label: "Shop Shirting", href: "/shop/category/shirts" },
     secondaryCta: { label: "View Offers", href: "/shop/offers" },
   },
@@ -62,7 +70,8 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "even at rest.",
     description:
       "Polos and easy trousers for the hours between meetings — no compromise on cut, cloth, or how it wears by evening.",
-    image: "https://images.unsplash.com/photo-1548454782-15b189d129ab?q=80&w=1800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1548454782-15b189d129ab?q=80&w=1800&auto=format&fit=crop",
     primaryCta: { label: "Shop Off-Duty", href: "/shop/category/polos" },
     secondaryCta: { label: "Shop All", href: "/shop" },
   },
@@ -74,13 +83,14 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "that matter.",
     description:
       "Panjabi and eveningwear tailored for weddings and Eid — heirloom fabric with a modern, unfussy fit.",
-    image: "https://images.unsplash.com/photo-1546572797-e8c933a75a1f?q=80&w=1800&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1546572797-e8c933a75a1f?q=80&w=1800&auto=format&fit=crop",
     primaryCta: { label: "Shop Panjabi", href: "/shop/category/panjabi" },
     secondaryCta: { label: "New Arrivals", href: "/shop/new-arrivals" },
   },
 ];
 
-const AUTOPLAY_MS = 3000;
+const AUTOPLAY_MS = 5000;
 
 export function HeroSection() {
   const [index, setIndex] = useState(0);
@@ -96,7 +106,7 @@ export function HeroSection() {
       setDirection(next > index ? 1 : next < index ? -1 : direction);
       setIndex(((next % count) + count) % count);
     },
-    [index, direction, count]
+    [index, direction, count],
   );
   const goNext = useCallback(() => goTo(index + 1), [goTo, index]);
   const goPrev = useCallback(() => goTo(index - 1), [goTo, index]);
@@ -145,7 +155,10 @@ export function HeroSection() {
             className="absolute inset-0"
           >
             <div
-              className={cn("absolute inset-0 bg-cover bg-center", !prefersReducedMotion && "animate-hero-zoom")}
+              className={cn(
+                "absolute inset-0 bg-cover bg-center",
+                !prefersReducedMotion && "animate-hero-zoom",
+              )}
               style={{
                 backgroundImage: `url(${slide.image})`,
                 animationDuration: `${AUTOPLAY_MS + 800}ms`,
@@ -154,8 +167,8 @@ export function HeroSection() {
             />
           </motion.div>
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/50 to-ink-950/10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink-950/75 via-ink-950/10 to-transparent lg:to-ink-950/10" />
+        <div className="absolute inset-0 bg-linear-to-t from-ink-950 via-ink-950/50 to-ink-950/10" />
+        <div className="absolute inset-0 bg-linear-to-r from-ink-950/75 via-ink-950/10 to-transparent lg:to-ink-950/10" />
         {/* Vignette for cinematic depth */}
         <div className="absolute inset-0 [box-shadow:inset_0_0_180px_60px_rgba(12,11,10,0.55)]" />
       </div>
@@ -163,13 +176,18 @@ export function HeroSection() {
       {/* Kicker mark, top-left */}
       <div className="container relative z-10 flex items-center gap-3 pt-8 sm:pt-10">
         <span className="h-px w-8 bg-brass-400" />
-        <span className="font-display text-xs italic tracking-[0.25em] text-white/60">Vero — Autumn/Winter</span>
+        <span className="font-display text-xs italic tracking-[0.25em] text-white/60">
+          Vero — Autumn/Winter
+        </span>
       </div>
 
       {/* Fitting rail — desktop chapter navigation */}
       <div className="absolute inset-y-0 right-8 z-10 hidden items-center lg:flex xl:right-14">
         <div className="relative flex flex-col items-end">
-          <span aria-hidden className="absolute -top-8 right-[9px] h-8 w-px bg-white/15" />
+          <span
+            aria-hidden
+            className="absolute -top-8 right-2.25 h-8 w-px bg-white/15"
+          />
           <ol className="flex flex-col items-end gap-1">
             {SLIDES.map((s, i) => {
               const active = i === index;
@@ -185,14 +203,20 @@ export function HeroSection() {
                     {active && (
                       <motion.span
                         layoutId="rail-active"
-                        transition={{ type: "spring", stiffness: 340, damping: 32 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 340,
+                          damping: 32,
+                        }}
                         className="absolute inset-0 rounded-full border border-brass-400/70 bg-brass-400/10"
                       />
                     )}
                     <span
                       className={cn(
                         "relative font-display text-sm italic transition-colors duration-300",
-                        active ? "text-brass-400" : "text-white/35 group-hover:text-white/70"
+                        active
+                          ? "text-brass-400"
+                          : "text-white/35 group-hover:text-white/70",
                       )}
                     >
                       {s.chapter}
@@ -200,14 +224,19 @@ export function HeroSection() {
                     <span
                       className={cn(
                         "relative overflow-hidden whitespace-nowrap text-xs font-medium uppercase tracking-[0.2em] transition-all duration-300",
-                        active ? "max-w-[7rem] text-white opacity-100" : "max-w-0 text-white/0 opacity-0"
+                        active
+                          ? "max-w-28 text-white opacity-100"
+                          : "max-w-0 text-white/0 opacity-0",
                       )}
                     >
                       {s.label}
                     </span>
                   </button>
                   {i < SLIDES.length - 1 && (
-                    <span aria-hidden className="mx-auto block h-2 w-px bg-white/15" />
+                    <span
+                      aria-hidden
+                      className="mx-auto block h-2 w-px bg-white/15"
+                    />
                   )}
                 </li>
               );
@@ -218,26 +247,37 @@ export function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="container relative flex min-h-[600px] flex-col justify-end gap-6 pb-16 pt-10 sm:min-h-[680px] sm:pb-24 lg:min-h-[780px] lg:pr-32 xl:pr-40">
+      <div className="container relative flex min-h-150 flex-col justify-end gap-6 pb-16 pt-10 sm:min-h-170 sm:pb-24 lg:min-h-195 lg:pr-32 xl:pr-40">
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.div
             key={slide.id}
             custom={direction}
-            initial={{ opacity: 0, x: prefersReducedMotion ? 0 : direction * 24 }}
+            initial={{
+              opacity: 0,
+              x: prefersReducedMotion ? 0 : direction * 24,
+            }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: prefersReducedMotion ? 0 : direction * -24 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
             className="flex gap-5 sm:gap-7"
           >
-            <span aria-hidden className="mt-2 hidden w-px shrink-0 bg-gradient-to-b from-brass-400 via-brass-400/40 to-transparent sm:block" />
+            <span
+              aria-hidden
+              className="mt-2 hidden w-px shrink-0 bg-linear-to-b from-brass-400 via-brass-400/40 to-transparent sm:block"
+            />
             <div className="flex flex-col gap-5">
               <span className="text-xs font-medium uppercase tracking-[0.3em] text-brass-400">
                 Chapter {slide.chapter} — {slide.label}
               </span>
               <h1 className="max-w-xl font-display text-4xl font-medium leading-[1.08] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                {slide.title} <em className="font-display font-light italic text-brass-200">{slide.titleAccent}</em>
+                {slide.title}{" "}
+                <em className="font-display font-light italic text-brass-200">
+                  {slide.titleAccent}
+                </em>
               </h1>
-              <p className="max-w-md text-sm text-white/75 sm:text-base">{slide.description}</p>
+              <p className="max-w-md text-sm text-white/75 sm:text-base">
+                {slide.description}
+              </p>
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Button variant="accent" size="lg" asChild>
                   <Link href={slide.primaryCta.href}>
@@ -251,7 +291,8 @@ export function HeroSection() {
                   className="border-white/30 bg-white/5 text-white hover:bg-white/15 hover:text-white"
                 >
                   <Link href={slide.secondaryCta.href}>
-                    {slide.secondaryCta.label} <ArrowUpRight className="size-4" />
+                    {slide.secondaryCta.label}{" "}
+                    <ArrowUpRight className="size-4" />
                   </Link>
                 </Button>
               </div>

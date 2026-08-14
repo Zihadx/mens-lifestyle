@@ -30,7 +30,7 @@ export function CategoryGridSection() {
             href={`/shop/category/${category.slug}`}
             className="group relative isolate overflow-hidden rounded-xl bg-muted outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4"
           >
-            <div className="relative aspect-[3/4] overflow-hidden">
+            <div className="relative aspect-3/4 overflow-hidden">
               {category.imageUrl && (
                 <Image
                   src={category.imageUrl}
@@ -42,7 +42,7 @@ export function CategoryGridSection() {
               )}
 
               {/* Subtle image treatment */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-100" />
 
               {/* Top index */}
               <span className="absolute left-4 top-4 font-mono text-[10px] tracking-[0.18em] text-white/70 sm:left-5 sm:top-5">

@@ -11,17 +11,47 @@ const TRUST_ITEMS = [
 
 export function TrustSection() {
   return (
-    <section className="border-y border-border bg-secondary/30">
-      <div className="container grid grid-cols-2 gap-6 py-12 sm:grid-cols-3 lg:grid-cols-6">
-        {TRUST_ITEMS.map(({ icon: Icon, title, description }) => (
-          <div key={title} className="flex flex-col items-center gap-2 text-center">
-            <div className="flex size-11 items-center justify-center rounded-full bg-background">
-              <Icon className="size-5 text-accent" strokeWidth={1.5} />
-            </div>
-            <p className="text-xs font-medium">{title}</p>
-            <p className="hidden text-[11px] text-muted-foreground sm:block">{description}</p>
-          </div>
-        ))}
+    <section className="border-y border-border bg-background">
+      <div className="container">
+        {/* Below lg: horizontal snap strip — a partial next item shows through
+            a right-edge fade, inviting a swipe instead of cramming a 2-col grid. */}
+        <ul
+          role="list"
+          className="-mx-4 flex snap-x snap-mandatory overflow-x-auto px-4 py-6 [mask-image:linear-gradient(to_right,black_88%,transparent)] [scrollbar-width:none] lg:hidden [&::-webkit-scrollbar]:hidden"
+        >
+          {TRUST_ITEMS.map(({ icon: Icon, title, description }, i) => (
+            <li
+              key={title}
+              className={`flex w-[68%] shrink-0 snap-start items-start gap-3 pr-6 sm:w-[40%] ${
+                i !== 0 ? "border-l border-border pl-6" : ""
+              }`}
+            >
+              <Icon className="mt-0.5 size-[18px] shrink-0 text-accent" strokeWidth={1.5} />
+              <div>
+                <p className="text-sm font-medium">{title}</p>
+                <p className="mt-0.5 text-xs leading-snug text-muted-foreground">{description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {/* lg and up: one settled row, hairline dividers instead of six
+            identical icon-circle cards. Icons stay quiet until hovered —
+            the accent color reads as a response, not a decoration. */}
+        <ul role="list" className="hidden lg:grid lg:grid-cols-6 lg:divide-x lg:divide-border">
+          {TRUST_ITEMS.map(({ icon: Icon, title, description }) => (
+            <li key={title} className="group flex flex-col gap-3 px-6 py-8 first:pl-0 last:pr-0">
+              <Icon
+                className="size-[18px] text-foreground/60 transition-colors duration-300 group-hover:text-accent"
+                strokeWidth={1.5}
+              />
+              <div>
+                <p className="text-[13px] font-medium tracking-tight">{title}</p>
+                <p className="mt-1 text-xs leading-snug text-muted-foreground">{description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

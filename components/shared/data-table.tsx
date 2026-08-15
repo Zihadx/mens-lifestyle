@@ -92,7 +92,7 @@ export function DataTable<TData>({
   const rows = table.getRowModel().rows;
 
   return (
-    <div className="min-w-0 space-y-4 p-2">
+    <div className="min-w-0 space-y-4">
       {data.length === 0 ? (
         <div className="rounded-lg border border-border">
           <EmptyState icon={Inbox} title={emptyTitle} description={emptyDescription} />
@@ -141,7 +141,7 @@ export function DataTable<TData>({
               (unlabeled + full width if the column has no string header,
               e.g. a checkbox or actions column).
           ============================================================ */}
-          <div className="space-y-3 sm:hidden p-2">
+          <div className="space-y-3 sm:hidden">
             {rows.map((row) => (
               <div
                 key={row.id}
@@ -166,7 +166,7 @@ export function DataTable<TData>({
                         <span className="shrink-0 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                           {label}
                         </span>
-                        <span className="min-w-0 text-right break-words">{content}</span>
+                        <span className="min-w-0 text-right wrap-break-word">{content}</span>
                       </div>
                     );
                   })}

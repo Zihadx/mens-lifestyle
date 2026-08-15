@@ -318,7 +318,7 @@ export function ProductForm({ product }: { product?: Product }) {
                 name="compareAtPrice"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Compare-at Price</FormLabel>
+                    <FormLabel>Compare Price</FormLabel>
                     <FormControl>
                       <Input type="number" {...field} value={field.value ?? ""} />
                     </FormControl>

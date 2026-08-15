@@ -74,11 +74,11 @@ export default function AdminSettingsPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label>Inside Dhaka Charge (৳)</Label>
+              <Label>Inside Dhaka (৳)</Label>
               <Input type="number" value={form.insideDhakaCharge} onChange={(e) => set("insideDhakaCharge", Number(e.target.value))} />
             </div>
             <div className="space-y-1.5">
-              <Label>Outside Dhaka Charge (৳)</Label>
+              <Label>Outside Dhaka(৳)</Label>
               <Input type="number" value={form.outsideDhakaCharge} onChange={(e) => set("outsideDhakaCharge", Number(e.target.value))} />
             </div>
           </div>

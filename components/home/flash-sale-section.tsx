@@ -18,9 +18,7 @@ function TimeUnit({
   return (
     <div
       className={`group relative overflow-hidden border-l px-4 py-1 ${
-        featured
-          ? "border-white/30"
-          : "border-white/10"
+        featured ? "border-white/30" : "border-white/10"
       }`}
     >
       {/* subtle hover illumination */}
@@ -109,14 +107,12 @@ export function FlashSaleSection() {
 
             <h2 className="max-w-xl font-display text-4xl font-medium leading-[0.98] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Up to 20% off
-              <span className="block text-white/65">
-                selected styles.
-              </span>
+              <span className="block text-white/65">selected styles.</span>
             </h2>
 
             <p className="mt-5 max-w-md text-sm leading-6 text-white/65">
-              Limited stock on Eid panjabi, bomber jackets, and chino
-              trousers. Ends soon.
+              Limited stock on Eid panjabi, bomber jackets, and chino trousers.
+              Ends soon.
             </p>
 
             <Button
@@ -144,11 +140,7 @@ export function FlashSaleSection() {
             </div>
 
             <div className="flex items-start">
-              <TimeUnit
-                value={days}
-                label="Days"
-                featured
-              />
+              <TimeUnit value={days} label="Days" featured />
 
               <TimeUnit value={hours} label="Hrs" />
 
@@ -164,7 +156,7 @@ export function FlashSaleSection() {
           <div className="h-px flex-1 bg-white/15" />
 
           <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-white/35">
-            VERO / 2026
+            ZYQO / 2026
           </span>
 
           <div className="h-px w-8 bg-white/15" />

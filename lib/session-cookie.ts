@@ -1,6 +1,6 @@
 import type { UserRole } from "@/store/slices/session-slice";
 
-const COOKIE_NAME = "vero_session_role";
+const COOKIE_NAME = "ZYQO_session_role";
 
 /**
  * Frontend-only session marker. A real backend would issue an httpOnly,

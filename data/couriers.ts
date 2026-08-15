@@ -26,7 +26,7 @@ export const courierShipments: CourierShipment[] = orders
     trackingId: o.trackingId!,
     trackingUrl: `https://track.example-courier.com/${o.trackingId}`,
     status: ORDER_TO_COURIER_STATUS[o.status] ?? "pending-pickup",
-    pickupAddress: "VERO Warehouse, Tejgaon Industrial Area, Dhaka",
+    pickupAddress: "ZYQO Warehouse, Tejgaon Industrial Area, Dhaka",
     deliveryAddress: `${o.address.addressLine}, ${o.address.area}, ${o.address.district}`,
     codAmount: o.paymentMethod === "cod" ? o.total : 0,
     deliveryCharge: o.deliveryCharge,
@@ -34,6 +34,8 @@ export const courierShipments: CourierShipment[] = orders
     createdAt: o.createdAt,
   }));
 
-export function getShipmentByOrderId(orderId: string): CourierShipment | undefined {
+export function getShipmentByOrderId(
+  orderId: string,
+): CourierShipment | undefined {
   return courierShipments.find((s) => s.orderId === orderId);
 }

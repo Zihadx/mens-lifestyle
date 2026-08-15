@@ -25,7 +25,7 @@ export function InstagramSection() {
           </div>
 
           <h2 className="font-display text-3xl font-medium tracking-tight">
-            @verostore
+            @zyqostore
           </h2>
         </div>
 

@@ -23,7 +23,7 @@ const FOOTER_LINKS = {
     { label: "Contact Us", href: "/contact" },
   ],
   company: [
-    { label: "About VERO", href: "/about" },
+    { label: "About " + siteConfig.name, href: "/about" },
     { label: "Careers", href: "/careers" },
     { label: "Store Locator", href: "/stores" },
   ],

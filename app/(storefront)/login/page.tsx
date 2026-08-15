@@ -9,11 +9,14 @@ export default function LoginPage() {
   return (
     <AuthShell
       title="Sign In"
-      description="Welcome back to VERO."
+      description="Welcome back to ZYQO."
       footer={
         <>
           Don't have an account?{" "}
-          <Link href="/register" className="font-medium text-accent hover:underline">
+          <Link
+            href="/register"
+            className="font-medium text-accent hover:underline"
+          >
             Create one
           </Link>
         </>

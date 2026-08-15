@@ -9,11 +9,14 @@ export default function RegisterPage() {
   return (
     <AuthShell
       title="Create Account"
-      description="Join VERO for faster checkout and order tracking."
+      description="Join ZYQO for faster checkout and order tracking."
       footer={
         <>
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-accent hover:underline">
+          <Link
+            href="/login"
+            className="font-medium text-accent hover:underline"
+          >
             Sign in
           </Link>
         </>

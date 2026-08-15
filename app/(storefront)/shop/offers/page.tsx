@@ -3,9 +3,15 @@ import { ProductDiscovery } from "@/features/product/components/product-discover
 
 export const metadata: Metadata = {
   title: "Offers",
-  description: "Discounted pieces from the current VERO collection.",
+  description: "Discounted pieces from the current ZYQO collection.",
 };
 
 export default function OffersPage() {
-  return <ProductDiscovery title="Offers" description="Limited-time discounts across the collection." collection="offers" />;
+  return (
+    <ProductDiscovery
+      title="Offers"
+      description="Limited-time discounts across the collection."
+      collection="offers"
+    />
+  );
 }

@@ -16,16 +16,6 @@ import { cn } from "@/lib/utils";
 
 /**
  * Homepage hero — an autoplaying "chapters" slider, not a static banner.
- * Signature element: the fitting rail — a vertical brass rail on the
- * right (desktop) strung with garment-tag chapter markers, with a
- * sliding brass highlight (shared layout animation) behind whichever
- * chapter is live. No arrows, no progress bar — the rail alone reads
- * as both index and navigation, and the slow Ken Burns drift on the
- * photography carries the sense of motion.
- *
- * Below lg, the same chapter-marker language reappears as a horizontal
- * strip at the bottom of the content column (own layoutId, since the
- * vertical rail is only display:none — not unmounted — below lg).
  */
 
 interface HeroSlide {
@@ -55,8 +45,7 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "considered completely.",
     description:
       "A refined wardrobe built for modern Bangladesh — from tailored layers and breathable shirting to effortless off-duty pieces and occasion-ready classics.",
-    image:
-      "https://i.ibb.co.com/wNHrYc57/vero-banner-primery-1.jpg",
+    image: "zyqo-images/banner/zyqo-banner.jpg",
     focal: { mobile: "center 35%", desktop: "center 45%" },
     primaryCta: { label: "Explore the Collection", href: "/shop" },
     secondaryCta: { label: "View New Arrivals", href: "/shop/new-arrivals" },
@@ -70,8 +59,7 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "with you.",
     description:
       "Wool-blend overcoats and blazers, cut close through the shoulder and roomy enough to layer through Dhaka's cool spell.",
-    image:
-      "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=1800&auto=format&fit=crop",
+    image: "zyqo-images/banner/zyqo-banner-1.jpg",
     focal: { mobile: "center 20%", desktop: "center 15%" },
     primaryCta: { label: "Shop Outerwear", href: "/shop/category/jackets" },
     secondaryCta: { label: "View Lookbook", href: "/shop" },
@@ -85,8 +73,7 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "always.",
     description:
       "Breathable cottons and linens finished with mother-of-pearl buttons — built to survive a Dhaka afternoon, not just look good in it.",
-    image:
-      "https://i.ibb.co.com/VcBSScKQ/vero-banner-1.jpg",
+    image: "zyqo-images/banner/zyqo-banner-2.jpg",
     focal: { mobile: "center 25%", desktop: "center 20%" },
     secondaryCta: { label: "View Offers", href: "/shop/offers" },
     primaryCta: { label: "Shop Shirting", href: "/shop/category/shirts" },
@@ -100,8 +87,7 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "even at rest.",
     description:
       "Polos and easy trousers for the hours between meetings — no compromise on cut, cloth, or how it wears by evening.",
-    image:
-      "https://i.ibb.co.com/tRpfvzH/vero-banner-2.jpg",
+    image: "zyqo-images/banner/zyqo-banner-3.jpg",
     focal: { mobile: "center 22%", desktop: "center 18%" },
     primaryCta: { label: "Shop Off-Duty", href: "/shop/category/polos" },
     secondaryCta: { label: "Shop All", href: "/shop" },
@@ -115,8 +101,7 @@ const SLIDES: HeroSlide[] = [
     titleAccent: "that matter.",
     description:
       "Panjabi and eveningwear tailored for weddings and Eid — heirloom fabric with a modern, unfussy fit.",
-    image:
-      "https://i.ibb.co.com/FkGd2bqH/vero-banner-4.jpg",
+    image: "zyqo-images/banner/zyqo-banner-4.jpg",
     focal: { mobile: "center 18%", desktop: "center 12%" },
     primaryCta: { label: "Shop Panjabi", href: "/shop/category/panjabi" },
     secondaryCta: { label: "New Arrivals", href: "/shop/new-arrivals" },
@@ -176,11 +161,13 @@ export function HeroSection() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      {/* Photography — crossfaded with a slow, continuous drift.
+      {/*=====================================================
+      Photography — crossfaded with a slow, continuous drift.
           min-h uses clamp() so height scales smoothly with viewport
           instead of jumping between three fixed breakpoints — that
           jump is what produced an awkward, very-wide/very-short crop
-          band at in-between desktop widths. */}
+          band at in-between desktop widths.
+          =============================================== */}
       <div className="absolute inset-0 min-h-[clamp(520px,78svh,900px)]">
         <AnimatePresence initial={false}>
           <motion.div
@@ -219,7 +206,7 @@ export function HeroSection() {
       <div className="container relative z-10 flex items-center gap-3 pt-8 sm:pt-10">
         <span className="h-px w-8 bg-brass-400" />
         <span className="font-display text-xs italic tracking-[0.25em] text-white/60">
-          Vero — Autumn/Winter
+          ZYQO — Autumn/Winter
         </span>
       </div>
 
@@ -352,7 +339,10 @@ export function HeroSection() {
             mounted) — sharing one layoutId across both would let
             Framer Motion try to animate between a zero-size hidden
             node and this one. */}
-        <nav aria-label="Chapters" className="mt-2 flex justify-center lg:hidden">
+        <nav
+          aria-label="Chapters"
+          className="mt-2 flex justify-center lg:hidden"
+        >
           <ol className="flex items-center gap-1 rounded-full border border-white/15 bg-ink-950/40 px-1.5 py-1.5 backdrop-blur-sm">
             {SLIDES.map((s, i) => {
               const active = i === index;

@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: "vero-root",
+  key: "ZYQO-root",
   storage,
   // Only state that should survive a refresh. Checkout, UI, and session are
   // deliberately excluded — checkout must never persist payment data, UI is
@@ -36,7 +36,11 @@ export const makeStore = () =>
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {
-          ignoredActions: ["persist/PERSIST", "persist/REHYDRATE", "persist/REGISTER"],
+          ignoredActions: [
+            "persist/PERSIST",
+            "persist/REHYDRATE",
+            "persist/REGISTER",
+          ],
         },
       }),
   });

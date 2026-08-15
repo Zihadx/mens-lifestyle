@@ -12,11 +12,31 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { VariantStockGrid } from "@/features/product/components/variant-stock-grid";
-import { productSchema, type ProductFormValues } from "@/schemas/product.schema";
-import { useCategories, useCreateProduct, useUpdateProduct } from "@/features/product/hooks/use-products";
+import {
+  productSchema,
+  type ProductFormValues,
+} from "@/schemas/product.schema";
+import {
+  useCategories,
+  useCreateProduct,
+  useUpdateProduct,
+} from "@/features/product/hooks/use-products";
 import { calculateDiscountPercent } from "@/lib/business-logic";
 import { formatBDT, slugify } from "@/lib/utils";
 import type { Product, ProductVariant, Size } from "@/types/product";
@@ -29,7 +49,7 @@ function productToFormValues(product?: Product): ProductFormValues {
       name: "",
       categoryId: "",
       categorySlug: "",
-      brand: "VERO",
+      brand: "ZYQO",
       sku: "",
       price: 0,
       compareAtPrice: undefined,
@@ -85,7 +105,8 @@ export function ProductForm({ product }: { product?: Product }) {
   const [stockMap, setStockMap] = useState<Record<string, number>>(() => {
     if (!product) return {};
     const map: Record<string, number> = {};
-    for (const v of product.variants) map[`${v.size}:${v.color.name}`] = v.stock;
+    for (const v of product.variants)
+      map[`${v.size}:${v.color.name}`] = v.stock;
     return map;
   });
 
@@ -109,18 +130,26 @@ export function ProductForm({ product }: { product?: Product }) {
   const discountPercent = calculateDiscountPercent(price || 0, compareAtPrice);
 
   function toggleSize(size: Size) {
-    const next = sizes.includes(size) ? sizes.filter((s) => s !== size) : [...sizes, size];
+    const next = sizes.includes(size)
+      ? sizes.filter((s) => s !== size)
+      : [...sizes, size];
     form.setValue("sizes", next, { shouldValidate: true });
   }
 
   function addColor() {
     if (!colorInput.name.trim()) return;
-    form.setValue("colors", [...colors, { ...colorInput }], { shouldValidate: true });
+    form.setValue("colors", [...colors, { ...colorInput }], {
+      shouldValidate: true,
+    });
     setColorInput({ name: "", hex: "#000000" });
   }
 
   function removeColor(name: string) {
-    form.setValue("colors", colors.filter((c) => c.name !== name), { shouldValidate: true });
+    form.setValue(
+      "colors",
+      colors.filter((c) => c.name !== name),
+      { shouldValidate: true },
+    );
   }
 
   function updateImageAt(index: number, value: string) {
@@ -136,7 +165,10 @@ export function ProductForm({ product }: { product?: Product }) {
       for (const size of values.sizes as Size[]) {
         const key = `${size}:${color.name}`;
         variants.push({
-          id: product?.variants.find((v) => v.size === size && v.color.name === color.name)?.id ?? `var_new_${Date.now()}_${vCounter++}`,
+          id:
+            product?.variants.find(
+              (v) => v.size === size && v.color.name === color.name,
+            )?.id ?? `var_new_${Date.now()}_${vCounter++}`,
           sku: `${values.sku}-${size}-${color.name.slice(0, 3).toUpperCase()}`,
           size,
           color,
@@ -160,18 +192,33 @@ export function ProductForm({ product }: { product?: Product }) {
       price: values.price,
       compareAtPrice: values.compareAtPrice || undefined,
       cost: values.cost,
-      images: values.images.filter(Boolean).map((url, i) => ({ id: `img_${i}`, url, alt: values.name })),
+      images: values.images
+        .filter(Boolean)
+        .map((url, i) => ({ id: `img_${i}`, url, alt: values.name })),
       colors: values.colors,
       sizes: values.sizes as Size[],
       variants,
-      materials: values.materials.split(",").map((m) => m.trim()).filter(Boolean),
-      careInstructions: product?.careInstructions ?? ["Machine wash cold", "Do not bleach", "Tumble dry low"],
-      tags: (values.tags ?? "").split(",").map((t) => t.trim()).filter(Boolean),
+      materials: values.materials
+        .split(",")
+        .map((m) => m.trim())
+        .filter(Boolean),
+      careInstructions: product?.careInstructions ?? [
+        "Machine wash cold",
+        "Do not bleach",
+        "Tumble dry low",
+      ],
+      tags: (values.tags ?? "")
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
       status: values.status,
       isFeatured: values.isFeatured,
       isBestSeller: values.isBestSeller,
       isNewArrival: values.isNewArrival,
-      seo: { title: values.seoTitle || values.name, description: values.seoDescription || values.shortDescription },
+      seo: {
+        title: values.seoTitle || values.name,
+        description: values.seoDescription || values.shortDescription,
+      },
     };
 
     if (isEditing) {
@@ -182,7 +229,7 @@ export function ProductForm({ product }: { product?: Product }) {
             toast.success("Product updated");
             router.push("/admin/products");
           },
-        }
+        },
       );
     } else {
       createProduct.mutate(payload, {
@@ -196,10 +243,15 @@ export function ProductForm({ product }: { product?: Product }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]"
+      >
         <div className="space-y-6">
           <section className="space-y-4 rounded-lg border border-border bg-card p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Basic Information</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Basic Information
+            </h2>
             <FormField
               control={form.control}
               name="name"
@@ -207,7 +259,10 @@ export function ProductForm({ product }: { product?: Product }) {
                 <FormItem>
                   <FormLabel>Product Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Essential Crewneck Tee" {...field} />
+                    <Input
+                      placeholder="e.g. Essential Crewneck Tee"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -234,7 +289,7 @@ export function ProductForm({ product }: { product?: Product }) {
                   <FormItem>
                     <FormLabel>SKU</FormLabel>
                     <FormControl>
-                      <Input placeholder="VERO-XXXX" {...field} />
+                      <Input placeholder="ZYQO-XXXX" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -248,7 +303,10 @@ export function ProductForm({ product }: { product?: Product }) {
                 <FormItem>
                   <FormLabel>Short Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="One line shown on product cards" {...field} />
+                    <Input
+                      placeholder="One line shown on product cards"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -288,7 +346,10 @@ export function ProductForm({ product }: { product?: Product }) {
                   <FormItem>
                     <FormLabel>Tags (comma separated)</FormLabel>
                     <FormControl>
-                      <Input placeholder="basics, cotton, everyday" {...field} />
+                      <Input
+                        placeholder="basics, cotton, everyday"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -298,7 +359,9 @@ export function ProductForm({ product }: { product?: Product }) {
           </section>
 
           <section className="space-y-4 rounded-lg border border-border bg-card p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Pricing</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Pricing
+            </h2>
             <div className="grid grid-cols-3 gap-4">
               <FormField
                 control={form.control}
@@ -320,7 +383,11 @@ export function ProductForm({ product }: { product?: Product }) {
                   <FormItem>
                     <FormLabel>Compare Price</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} value={field.value ?? ""} />
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -341,35 +408,70 @@ export function ProductForm({ product }: { product?: Product }) {
               />
             </div>
             <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-              {discountPercent > 0 && <span>Discount: <strong className="text-foreground">{discountPercent}%</strong></span>}
-              {profitMargin !== null && <span>Profit margin: <strong className="text-foreground">{profitMargin}%</strong> ({formatBDT((price || 0) - (cost || 0))})</span>}
+              {discountPercent > 0 && (
+                <span>
+                  Discount:{" "}
+                  <strong className="text-foreground">
+                    {discountPercent}%
+                  </strong>
+                </span>
+              )}
+              {profitMargin !== null && (
+                <span>
+                  Profit margin:{" "}
+                  <strong className="text-foreground">{profitMargin}%</strong> (
+                  {formatBDT((price || 0) - (cost || 0))})
+                </span>
+              )}
             </div>
           </section>
 
           <section className="space-y-4 rounded-lg border border-border bg-card p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Images</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Images
+            </h2>
             {images.map((url, i) => (
               <div key={i} className="flex gap-2">
-                <Input placeholder="https://..." value={url} onChange={(e) => updateImageAt(i, e.target.value)} />
+                <Input
+                  placeholder="https://..."
+                  value={url}
+                  onChange={(e) => updateImageAt(i, e.target.value)}
+                />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => form.setValue("images", images.filter((_, idx) => idx !== i))}
+                  onClick={() =>
+                    form.setValue(
+                      "images",
+                      images.filter((_, idx) => idx !== i),
+                    )
+                  }
                   disabled={images.length <= 1}
                 >
                   <Trash2 className="size-4" />
                 </Button>
               </div>
             ))}
-            <Button type="button" variant="outline" size="sm" onClick={() => form.setValue("images", [...images, ""])}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => form.setValue("images", [...images, ""])}
+            >
               <Plus className="size-3.5" /> Add Image URL
             </Button>
-            {form.formState.errors.images && <p className="text-xs text-destructive">{form.formState.errors.images.message as string}</p>}
+            {form.formState.errors.images && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.images.message as string}
+              </p>
+            )}
           </section>
 
           <section className="space-y-4 rounded-lg border border-border bg-card p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Variants</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Variants
+            </h2>
             <div>
               <Label className="mb-2 block text-xs">Sizes</Label>
               <div className="flex flex-wrap gap-2">
@@ -379,7 +481,9 @@ export function ProductForm({ product }: { product?: Product }) {
                     type="button"
                     onClick={() => toggleSize(size)}
                     className={`flex h-9 min-w-9 items-center justify-center rounded-md border px-2.5 text-xs font-medium transition-colors ${
-                      sizes.includes(size) ? "border-primary bg-primary text-primary-foreground" : "border-input hover:border-foreground"
+                      sizes.includes(size)
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-input hover:border-foreground"
                     }`}
                   >
                     {size}
@@ -391,8 +495,14 @@ export function ProductForm({ product }: { product?: Product }) {
               <Label className="mb-2 block text-xs">Colors</Label>
               <div className="mb-2 flex flex-wrap gap-2">
                 {colors.map((c) => (
-                  <span key={c.name} className="flex items-center gap-1.5 rounded-full border border-border py-1 pl-1 pr-2 text-xs">
-                    <span className="size-3.5 rounded-full border border-border" style={{ backgroundColor: c.hex }} />
+                  <span
+                    key={c.name}
+                    className="flex items-center gap-1.5 rounded-full border border-border py-1 pl-1 pr-2 text-xs"
+                  >
+                    <span
+                      className="size-3.5 rounded-full border border-border"
+                      style={{ backgroundColor: c.hex }}
+                    />
                     {c.name}
                     <button type="button" onClick={() => removeColor(c.name)}>
                       <Trash2 className="size-3" />
@@ -404,16 +514,25 @@ export function ProductForm({ product }: { product?: Product }) {
                 <Input
                   placeholder="Color name"
                   value={colorInput.name}
-                  onChange={(e) => setColorInput({ ...colorInput, name: e.target.value })}
+                  onChange={(e) =>
+                    setColorInput({ ...colorInput, name: e.target.value })
+                  }
                   className="h-9"
                 />
                 <input
                   type="color"
                   value={colorInput.hex}
-                  onChange={(e) => setColorInput({ ...colorInput, hex: e.target.value })}
+                  onChange={(e) =>
+                    setColorInput({ ...colorInput, hex: e.target.value })
+                  }
                   className="h-9 w-12 rounded-md border border-input"
                 />
-                <Button type="button" variant="outline" size="sm" onClick={addColor}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addColor}
+                >
                   <Plus className="size-3.5" /> Add
                 </Button>
               </div>
@@ -427,13 +546,17 @@ export function ProductForm({ product }: { product?: Product }) {
                 sizes={sizes}
                 colors={colors}
                 stockMap={stockMap}
-                onChange={(key, stock) => setStockMap((prev) => ({ ...prev, [key]: stock }))}
+                onChange={(key, stock) =>
+                  setStockMap((prev) => ({ ...prev, [key]: stock }))
+                }
               />
             </div>
           </section>
 
           <section className="space-y-4 rounded-lg border border-border bg-card p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">SEO</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              SEO
+            </h2>
             <FormField
               control={form.control}
               name="seoTitle"
@@ -454,7 +577,11 @@ export function ProductForm({ product }: { product?: Product }) {
                 <FormItem>
                   <FormLabel>SEO Description</FormLabel>
                   <FormControl>
-                    <Textarea rows={2} placeholder="Defaults to short description" {...field} />
+                    <Textarea
+                      rows={2}
+                      placeholder="Defaults to short description"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -465,7 +592,9 @@ export function ProductForm({ product }: { product?: Product }) {
 
         <div className="h-fit space-y-6">
           <section className="space-y-4 rounded-lg border border-border bg-card p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Organize</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Organize
+            </h2>
             <FormField
               control={form.control}
               name="status"
@@ -522,14 +651,19 @@ export function ProductForm({ product }: { product?: Product }) {
           </section>
 
           <section className="space-y-4 rounded-lg border border-border bg-card p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Flags</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Flags
+            </h2>
             <FormField
               control={form.control}
               name="isFeatured"
               render={({ field }) => (
                 <div className="flex items-center justify-between">
                   <Label>Featured</Label>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
                 </div>
               )}
             />
@@ -539,7 +673,10 @@ export function ProductForm({ product }: { product?: Product }) {
               render={({ field }) => (
                 <div className="flex items-center justify-between">
                   <Label>Best Seller</Label>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
                 </div>
               )}
             />
@@ -549,13 +686,21 @@ export function ProductForm({ product }: { product?: Product }) {
               render={({ field }) => (
                 <div className="flex items-center justify-between">
                   <Label>New Arrival</Label>
-                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
                 </div>
               )}
             />
           </section>
 
-          <Button type="submit" size="lg" className="w-full" loading={createProduct.isPending || updateProduct.isPending}>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            loading={createProduct.isPending || updateProduct.isPending}
+          >
             {isEditing ? "Save Changes" : "Create Product"}
           </Button>
         </div>

@@ -16,9 +16,9 @@ export interface StoreSettings {
 }
 
 export const storeSettings: StoreSettings = {
-  storeName: "VERO",
+  storeName: "ZYQO",
   supportPhone: "+880 1XXX-XXXXXX",
-  supportEmail: "support@vero-store.example.com",
+  supportEmail: "support@ZYQO-store.example.com",
   address: "House 12, Road 5, Banani, Dhaka 1213, Bangladesh",
   currency: "BDT",
   freeDeliveryThreshold: 2500,
@@ -26,8 +26,8 @@ export const storeSettings: StoreSettings = {
   outsideDhakaCharge: 130,
   codEnabled: true,
   onlinePaymentEnabled: true,
-  facebookUrl: "https://facebook.com/verostore",
-  instagramUrl: "https://instagram.com/verostore",
+  facebookUrl: "https://facebook.com/ZYQOstore",
+  instagramUrl: "https://instagram.com/ZYQOstore",
   metaPixelId: "",
   gaId: "",
 };

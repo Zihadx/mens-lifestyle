@@ -34,7 +34,7 @@ export function SiteHeader() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
       <div className="container flex h-16 items-center justify-between gap-4">
         <div className="flex items-center gap-2 lg:hidden">
           <Button variant="ghost" size="icon" onClick={() => dispatch(setMobileNavOpen(true))} aria-label="Open menu">
@@ -60,7 +60,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" onClick={() => dispatch(setSearchOpen(true))} aria-label="Search">
-            <Search className="size-[18px]" />
+            <Search className="size-4.5" />
           </Button>
 
           <Button
@@ -70,12 +70,12 @@ export function SiteHeader() {
             aria-label="Toggle theme"
             className="hidden sm:inline-flex"
           >
-            {mounted && theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
+            {mounted && theme === "dark" ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
           </Button>
 
           <Button variant="ghost" size="icon" asChild className="relative hidden sm:inline-flex">
             <Link href="/wishlist" aria-label="Wishlist">
-              <Heart className="size-[18px]" />
+              <Heart className="size-4.5" />
               {wishlistCount > 0 && (
                 <span className="absolute right-0.5 top-0.5 flex size-4 items-center justify-center rounded-full bg-accent text-[10px] font-medium text-accent-foreground">
                   {wishlistCount}
@@ -87,7 +87,7 @@ export function SiteHeader() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="hidden sm:inline-flex" aria-label="Account">
-                <User className="size-[18px]" />
+                <User className="size-4.5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
@@ -127,7 +127,7 @@ export function SiteHeader() {
           </DropdownMenu>
 
           <Button variant="ghost" size="icon" onClick={openCart} className="relative" aria-label="Cart">
-            <ShoppingBag className="size-[18px]" />
+            <ShoppingBag className="size-4.5" />
             <AnimatePresence>
               {itemCount > 0 && (
                 <motion.span

@@ -4,16 +4,19 @@ import { slugify } from "@/lib/utils";
 const COLOR_LIBRARY: Record<string, string> = {
   "Charcoal Black": "#25262b",
   "Off White": "#f4f1ea",
-  "Navy": "#1c2b4a",
+  Navy: "#1c2b4a",
   "Stone Beige": "#d8c9ab",
-  "Olive": "#5c5c3d",
-  "Burgundy": "#5e1f2e",
+  Olive: "#5c5c3d",
+  Burgundy: "#5e1f2e",
   "Slate Grey": "#6b6f76",
-  "Rust": "#a0522d",
-  "Ivory": "#fbf8f1",
+  Rust: "#a0522d",
+  Ivory: "#fbf8f1",
   "Forest Green": "#2f4130",
   "Powder Blue": "#a9c4d8",
   "Brick Red": "#8c3b2e",
+  "Steel Silver": "#9ea4ab",
+  Gunmetal: "#3a3d42",
+  "Espresso Brown": "#4a3226",
 };
 
 function color(name: keyof typeof COLOR_LIBRARY | string) {
@@ -21,7 +24,11 @@ function color(name: keyof typeof COLOR_LIBRARY | string) {
 }
 
 let variantCounter = 1;
-function buildVariants(sizes: Size[], colorNames: string[], baseStock = 24): ProductVariant[] {
+function buildVariants(
+  sizes: Size[],
+  colorNames: string[],
+  baseStock = 24,
+): ProductVariant[] {
   const variants: ProductVariant[] = [];
   for (const colorName of colorNames) {
     for (const size of sizes) {
@@ -45,7 +52,15 @@ function buildVariants(sizes: Size[], colorNames: string[], baseStock = 24): Pro
 
 interface ProductTemplate {
   name: string;
-  categorySlug: "t-shirts" | "shirts" | "panjabi" | "polos" | "trousers" | "jackets";
+  categorySlug:
+    | "t-shirts"
+    | "shirts"
+    | "panjabi"
+    | "polos"
+    | "trousers"
+    | "jackets"
+    | "accessories"
+    | "fragrance";
   categoryId: string;
   price: number;
   compareAtPrice?: number;
@@ -77,8 +92,9 @@ const TEMPLATES: ProductTemplate[] = [
     colors: ["Charcoal Black", "Off White", "Navy", "Stone Beige"],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000",
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000",
+      "/zyqo-images/product-images/t-shirt.jpg",
+      "/zyqo-images/product-images/t-shirt-2.jpg",
+      "/zyqo-images/product-images/t-shirt-and-pant.jpg",
     ],
     tags: ["basics", "cotton", "everyday"],
     isBestSeller: true,
@@ -97,8 +113,8 @@ const TEMPLATES: ProductTemplate[] = [
     colors: ["Charcoal Black", "Stone Beige"],
     sizes: ["S", "M", "L", "XL"],
     images: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=1000",
-      "https://images.unsplash.com/photo-1503341960582-b45751874cf0?q=80&w=1000",
+      "/zyqo-images/product-images/t-shirt-2.jpg",
+      "/zyqo-images/product-images/t-shirt-and-pant-1.jpg",
     ],
     tags: ["streetwear", "oversized"],
     isNewArrival: true,
@@ -116,7 +132,7 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["95% cotton", "5% elastane"],
     colors: ["Navy", "Olive", "Off White"],
     sizes: ["S", "M", "L", "XL", "XXL"],
-    images: ["https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000"],
+    images: ["/zyqo-images/product-images/t-shirt-2.jpg"],
     tags: ["henley", "casual"],
     rating: 4.3,
     reviewCount: 54,
@@ -134,8 +150,8 @@ const TEMPLATES: ProductTemplate[] = [
     colors: ["Off White", "Powder Blue", "Charcoal Black"],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1598032895397-b9472444bf93?q=80&w=1000",
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1000",
+      "/zyqo-images/product-images/shirt.jpg",
+      "/zyqo-images/product-images/all.jpg",
     ],
     tags: ["formal", "office", "cotton"],
     isBestSeller: true,
@@ -153,7 +169,9 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["55% linen", "45% cotton"],
     colors: ["Stone Beige", "Olive", "Rust"],
     sizes: ["M", "L", "XL"],
-    images: ["https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=1000"],
+    images: [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=1000",
+    ],
     tags: ["linen", "summer", "resort"],
     isNewArrival: true,
     rating: 4.5,
@@ -170,7 +188,9 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["100% cotton denim"],
     colors: ["Navy", "Slate Grey"],
     sizes: ["S", "M", "L", "XL"],
-    images: ["https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1000"],
+    images: [
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1000",
+    ],
     tags: ["denim", "layering"],
     rating: 4.2,
     reviewCount: 38,
@@ -188,8 +208,8 @@ const TEMPLATES: ProductTemplate[] = [
     colors: ["Ivory", "Burgundy", "Forest Green"],
     sizes: ["S", "M", "L", "XL", "XXL", "3XL"],
     images: [
-      "https://images.unsplash.com/photo-1622470953794-aa9c70b0fb9d?q=80&w=1000",
-      "https://images.unsplash.com/photo-1610030181087-540f6f9db1ed?q=80&w=1000",
+      "/zyqo-images/product-images/panjabi-0.jpg",
+      "/zyqo-images/product-images/panjabi-1.jpg",
     ],
     tags: ["eid", "festive", "embroidered"],
     isBestSeller: true,
@@ -208,7 +228,10 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["100% cotton"],
     colors: ["Off White", "Stone Beige", "Powder Blue"],
     sizes: ["S", "M", "L", "XL", "XXL", "3XL"],
-    images: ["https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?q=80&w=1000"],
+    images: [
+      "/zyqo-images/product-images/panjabi-2.jpg",
+      "/zyqo-images/product-images/panjabi-3.jpg",
+    ],
     tags: ["everyday", "prayer"],
     rating: 4.5,
     reviewCount: 142,
@@ -224,7 +247,9 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["100% piqué cotton"],
     colors: ["Navy", "Charcoal Black", "Forest Green", "Burgundy"],
     sizes: ["S", "M", "L", "XL", "XXL"],
-    images: ["https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000"],
+    images: [
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000",
+    ],
     tags: ["polo", "smart-casual"],
     isBestSeller: true,
     rating: 4.6,
@@ -241,7 +266,7 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["95% cotton", "5% elastane"],
     colors: ["Olive", "Slate Grey"],
     sizes: ["M", "L", "XL"],
-    images: ["https://images.unsplash.com/photo-1622445275649-434e78a83bb0?q=80&w=1000"],
+    images: ["/zyqo-images/product-images/t-shirt.jpg"],
     tags: ["polo", "textured"],
     isNewArrival: true,
     rating: 4.3,
@@ -260,8 +285,8 @@ const TEMPLATES: ProductTemplate[] = [
     colors: ["Stone Beige", "Charcoal Black", "Navy", "Olive"],
     sizes: ["S", "M", "L", "XL", "XXL"],
     images: [
-      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1000",
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?q=80&w=1000",
+      "/zyqo-images/product-images/pant.jpg",
+      "/zyqo-images/product-images/combo.jpg",
     ],
     tags: ["chino", "office", "stretch"],
     isBestSeller: true,
@@ -279,7 +304,7 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["Poly-viscose blend"],
     colors: ["Charcoal Black", "Slate Grey", "Navy"],
     sizes: ["S", "M", "L", "XL"],
-    images: ["https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=1000"],
+    images: ["/zyqo-images/product-images/pant-2.jpg"],
     tags: ["formal", "office"],
     rating: 4.4,
     reviewCount: 71,
@@ -295,7 +320,9 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["Cotton ripstop"],
     colors: ["Olive", "Charcoal Black", "Stone Beige"],
     sizes: ["S", "M", "L", "XL", "XXL"],
-    images: ["https://images.unsplash.com/photo-1517438322307-e67111335449?q=80&w=1000"],
+    images: [
+      "https://images.unsplash.com/photo-1517438322307-e67111335449?q=80&w=1000",
+    ],
     tags: ["cargo", "streetwear"],
     isNewArrival: true,
     rating: 4.2,
@@ -333,7 +360,9 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["100% cotton denim"],
     colors: ["Navy", "Slate Grey"],
     sizes: ["S", "M", "L", "XL"],
-    images: ["https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?q=80&w=1000"],
+    images: [
+      "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?q=80&w=1000",
+    ],
     tags: ["denim", "jacket"],
     rating: 4.5,
     reviewCount: 52,
@@ -349,11 +378,193 @@ const TEMPLATES: ProductTemplate[] = [
     materials: ["Polyester shell and lining"],
     colors: ["Charcoal Black", "Rust", "Forest Green"],
     sizes: ["M", "L", "XL"],
-    images: ["https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000"],
+    images: [
+      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000",
+    ],
     tags: ["vest", "layering"],
     isNewArrival: true,
     rating: 4.1,
     reviewCount: 21,
+  },
+  {
+    name: "Classic Chronograph Watch",
+    categorySlug: "accessories",
+    categoryId: "cat_accessories",
+    price: 4500,
+    compareAtPrice: 5200,
+    shortDescription: "Stainless steel case with a working chronograph dial.",
+    description:
+      "A steel-cased chronograph built to move between the office and everything after it — sub-dials that actually function, a scratch-resistant mineral crystal, and a link bracelet that adjusts with a standard pin tool.",
+    materials: [
+      "Stainless steel case",
+      "Mineral glass",
+      "Stainless steel bracelet",
+    ],
+    colors: ["Steel Silver", "Gunmetal"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/watch.jpg",
+      "/zyqo-images/product-images/watch-2.jpg",
+    ],
+    tags: ["watch", "formal", "steel"],
+    isBestSeller: true,
+    isFeatured: true,
+    rating: 4.6,
+    reviewCount: 118,
+  },
+  {
+    name: "Leather Strap Dress Watch",
+    categorySlug: "accessories",
+    categoryId: "cat_accessories",
+    price: 3200,
+    shortDescription: "Slim alloy case on a genuine leather strap.",
+    description:
+      "Slim enough to sit under a shirt cuff without a fight, this dress watch pairs an alloy case with a genuine leather strap that breaks in over the first few weeks of wear. Built for suits and panjabi alike.",
+    materials: ["Alloy case", "Genuine leather strap"],
+    colors: ["Espresso Brown", "Charcoal Black"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/watch-3.jpg",
+      "/zyqo-images/product-images/watch-4.jpg",
+    ],
+    tags: ["watch", "formal", "leather"],
+    rating: 4.4,
+    reviewCount: 64,
+  },
+  {
+    name: "Everyday Sport Watch",
+    categorySlug: "accessories",
+    categoryId: "cat_accessories",
+    price: 2650,
+    shortDescription: "Silicone strap, water-resistant to 50m.",
+    description:
+      "The one you don't take off — a silicone strap that doesn't mind sweat or rain, water resistance rated to 50m, and a dial big enough to read at a glance mid-commute.",
+    materials: ["Alloy case", "Silicone strap", "Water-resistant to 50m"],
+    colors: ["Charcoal Black"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/watch-5.jpg",
+      "/zyqo-images/product-images/watch-1.jpg",
+    ],
+    tags: ["watch", "sport", "everyday"],
+    isNewArrival: true,
+    rating: 4.3,
+    reviewCount: 41,
+  },
+  {
+    name: "Full-Grain Leather Belt",
+    categorySlug: "accessories",
+    categoryId: "cat_accessories",
+    price: 950,
+    shortDescription: "Full-grain leather, brushed metal buckle.",
+    description:
+      "Cut from a single piece of full-grain leather that ages into a deeper patina with wear, finished with a brushed metal buckle that won't flake or discolor after a few humid seasons.",
+    materials: ["Full-grain leather", "Brushed metal buckle"],
+    colors: ["Espresso Brown", "Charcoal Black"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/belt.jpg",
+      "/zyqo-images/product-images/belt-2.jpg",
+    ],
+    tags: ["belt", "leather", "formal"],
+    isBestSeller: true,
+    rating: 4.5,
+    reviewCount: 156,
+  },
+  {
+    name: "Reversible Formal Belt",
+    categorySlug: "accessories",
+    categoryId: "cat_accessories",
+    price: 1150,
+    shortDescription: "Two colors, one belt — rotating buckle.",
+    description:
+      "A rotating buckle flips this belt between black and brown in one motion, so a single belt covers both a charcoal suit and a pair of chinos without a second purchase.",
+    materials: ["Reversible leather", "Rotating metal buckle"],
+    colors: ["Charcoal Black", "Espresso Brown"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/belt-3.jpg",
+      "/zyqo-images/product-images/belt-4.jpg",
+    ],
+    tags: ["belt", "formal", "reversible"],
+    rating: 4.4,
+    reviewCount: 58,
+  },
+  {
+    name: "Braided Leather Bracelet Set",
+    categorySlug: "accessories",
+    categoryId: "cat_accessories",
+    price: 650,
+    shortDescription: "Set of three braided cord bracelets.",
+    description:
+      "Three braided leather cords in a set, meant to be stacked rather than worn alone — a steel clasp on each keeps them secure through a full day without needing to be readjusted.",
+    materials: ["Braided leather cord", "Stainless steel clasp"],
+    colors: ["Charcoal Black", "Espresso Brown"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/bracelets.jpg",
+      "/zyqo-images/product-images/bracelets-1.jpg",
+    ],
+    tags: ["bracelet", "layering"],
+    isNewArrival: true,
+    rating: 4.2,
+    reviewCount: 33,
+  },
+  {
+    name: "Signature Eau de Parfum",
+    categorySlug: "fragrance",
+    categoryId: "cat_fragrance",
+    price: 1850,
+    shortDescription: "100ml EDP, woody-amber base.",
+    description:
+      "A woody-amber signature scent built to last from the morning commute through a late dinner — sprays clean without turning sharp, and the 100ml bottle is sized to actually finish before it goes off.",
+    materials: ["Eau de Parfum concentration", "100ml glass bottle"],
+    colors: ["Original"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/perfume.jpg",
+      "/zyqo-images/product-images/perfume-2.jpg",
+    ],
+    tags: ["fragrance", "edp", "everyday"],
+    isBestSeller: true,
+    rating: 4.7,
+    reviewCount: 89,
+  },
+  {
+    name: "Oud Intense Attar",
+    categorySlug: "fragrance",
+    categoryId: "cat_fragrance",
+    price: 1450,
+    shortDescription: "Alcohol-free oud attar, 12ml roll-on.",
+    description:
+      "A concentrated, alcohol-free attar built around oud — a couple of dabs at the wrist and collar hold up through Jummah prayers and into the evening without needing a reapply.",
+    materials: ["Alcohol-free attar oil", "12ml roll-on bottle"],
+    colors: ["Original"],
+    sizes: ["One Size"],
+    images: ["/zyqo-images/product-images/perfume-3.jpg"],
+    tags: ["fragrance", "attar", "oud"],
+    rating: 4.6,
+    reviewCount: 47,
+  },
+  {
+    name: "Fresh Citrus Cologne",
+    categorySlug: "fragrance",
+    categoryId: "cat_fragrance",
+    price: 1650,
+    shortDescription: "Light citrus EDC for daily wear.",
+    description:
+      "A lighter citrus cologne for the days a heavier scent doesn't make sense — sharp on first spray, settling into something clean enough for a full day at the office.",
+    materials: ["Eau de Cologne", "100ml spray bottle"],
+    colors: ["Original"],
+    sizes: ["One Size"],
+    images: [
+      "/zyqo-images/product-images/perfume-4.jpg",
+      "/zyqo-images/product-images/perfume-1.jpg",
+    ],
+    tags: ["fragrance", "citrus", "daily wear"],
+    isNewArrival: true,
+    rating: 4.3,
+    reviewCount: 22,
   },
 ];
 
@@ -370,26 +581,37 @@ function toProduct(t: ProductTemplate, index: number): Product {
     description: t.description,
     categoryId: t.categoryId,
     categorySlug: t.categorySlug,
-    brand: "VERO",
-    sku: `VERO-${id.toUpperCase()}`,
+    brand: "ZYQO",
+    sku: `ZYQO-${id.toUpperCase()}`,
     price: t.price,
     compareAtPrice: t.compareAtPrice,
     cost: Math.round(t.price * 0.42),
-    images: t.images.map((url, i) => ({ id: `${id}_img_${i}`, url, alt: `${t.name} — view ${i + 1}` })),
+    images: t.images.map((url, i) => ({
+      id: `${id}_img_${i}`,
+      url,
+      alt: `${t.name} — view ${i + 1}`,
+    })),
     colors: t.colors.map((c) => color(c)),
     sizes: t.sizes,
     variants,
     materials: t.materials,
-    careInstructions: ["Machine wash cold", "Do not bleach", "Tumble dry low", "Iron on reverse if needed"],
+    careInstructions: [
+      "Machine wash cold",
+      "Do not bleach",
+      "Tumble dry low",
+      "Iron on reverse if needed",
+    ],
     tags: t.tags,
     rating: { average: t.rating, count: t.reviewCount },
     status: "published",
     isFeatured: !!t.isFeatured,
     isBestSeller: !!t.isBestSeller,
     isNewArrival: !!t.isNewArrival,
-    createdAt: new Date(Date.now() - index * 1000 * 60 * 60 * 24 * 3).toISOString(),
+    createdAt: new Date(
+      Date.now() - index * 1000 * 60 * 60 * 24 * 3,
+    ).toISOString(),
     seo: {
-      title: `${t.name} | VERO`,
+      title: `${t.name} | ZYQO`,
       description: t.shortDescription,
     },
   };

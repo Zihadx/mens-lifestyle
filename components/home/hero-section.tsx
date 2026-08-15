@@ -22,6 +22,10 @@ import { cn } from "@/lib/utils";
  * chapter is live. No arrows, no progress bar — the rail alone reads
  * as both index and navigation, and the slow Ken Burns drift on the
  * photography carries the sense of motion.
+ *
+ * Below lg, the same chapter-marker language reappears as a horizontal
+ * strip at the bottom of the content column (own layoutId, since the
+ * vertical rail is only display:none — not unmounted — below lg).
  */
 
 interface HeroSlide {
@@ -44,8 +48,23 @@ interface HeroSlide {
 
 const SLIDES: HeroSlide[] = [
   {
-    id: "outerwear",
+    id: "signature",
     chapter: "01",
+    label: "The Signature Edit",
+    title: "Modern essentials,",
+    titleAccent: "considered completely.",
+    description:
+      "A refined wardrobe built for modern Bangladesh — from tailored layers and breathable shirting to effortless off-duty pieces and occasion-ready classics.",
+    image:
+      "https://i.ibb.co.com/wNHrYc57/vero-banner-primery-1.jpg",
+    focal: { mobile: "center 35%", desktop: "center 45%" },
+    primaryCta: { label: "Explore the Collection", href: "/shop" },
+    secondaryCta: { label: "View New Arrivals", href: "/shop/new-arrivals" },
+  },
+
+  {
+    id: "outerwear",
+    chapter: "02",
     label: "Outerwear",
     title: "Structure that moves",
     titleAccent: "with you.",
@@ -57,9 +76,10 @@ const SLIDES: HeroSlide[] = [
     primaryCta: { label: "Shop Outerwear", href: "/shop/category/jackets" },
     secondaryCta: { label: "View Lookbook", href: "/shop" },
   },
+
   {
     id: "shirting",
-    chapter: "02",
+    chapter: "03",
     label: "Shirting",
     title: "Fabric first,",
     titleAccent: "always.",
@@ -71,9 +91,10 @@ const SLIDES: HeroSlide[] = [
     secondaryCta: { label: "View Offers", href: "/shop/offers" },
     primaryCta: { label: "Shop Shirting", href: "/shop/category/shirts" },
   },
+
   {
     id: "off-duty",
-    chapter: "03",
+    chapter: "04",
     label: "Off-Duty",
     title: "Considered,",
     titleAccent: "even at rest.",
@@ -85,9 +106,10 @@ const SLIDES: HeroSlide[] = [
     primaryCta: { label: "Shop Off-Duty", href: "/shop/category/polos" },
     secondaryCta: { label: "Shop All", href: "/shop" },
   },
+
   {
     id: "occasion",
-    chapter: "04",
+    chapter: "05",
     label: "Occasion",
     title: "For the nights",
     titleAccent: "that matter.",
@@ -172,7 +194,7 @@ export function HeroSection() {
             <div
               className={cn(
                 "absolute inset-0 bg-cover bg-no-repeat",
-                "bg-[position:var(--focal-mobile)] lg:bg-[position:var(--focal-desktop)]",
+                "bg-position-(--focal-mobile) lg:bg-position-(--focal-desktop)",
                 !prefersReducedMotion && "animate-hero-zoom",
               )}
               style={
@@ -321,6 +343,65 @@ export function HeroSection() {
             </div>
           </motion.div>
         </AnimatePresence>
+
+        {/* Fitting rail — mobile/tablet chapter navigation.
+            Same garment-tag language as the desktop rail, laid
+            horizontal and pinned under the CTAs. Own layoutId
+            ("rail-active-mobile") since the desktop rail above is
+            only hidden via `hidden lg:flex` (display:none, still
+            mounted) — sharing one layoutId across both would let
+            Framer Motion try to animate between a zero-size hidden
+            node and this one. */}
+        <nav aria-label="Chapters" className="mt-2 flex justify-center lg:hidden">
+          <ol className="flex items-center gap-1 rounded-full border border-white/15 bg-ink-950/40 px-1.5 py-1.5 backdrop-blur-sm">
+            {SLIDES.map((s, i) => {
+              const active = i === index;
+              return (
+                <li key={s.id} className="relative">
+                  <button
+                    type="button"
+                    onClick={() => goTo(i)}
+                    aria-current={active}
+                    aria-label={`Go to ${s.label}`}
+                    className="group relative flex items-center gap-1.5 rounded-full px-3 py-1.5"
+                  >
+                    {active && (
+                      <motion.span
+                        layoutId="rail-active-mobile"
+                        transition={{
+                          type: "spring",
+                          stiffness: 340,
+                          damping: 32,
+                        }}
+                        className="absolute inset-0 rounded-full border border-brass-400/70 bg-brass-400/10"
+                      />
+                    )}
+                    <span
+                      className={cn(
+                        "relative font-display text-xs italic transition-colors duration-300",
+                        active
+                          ? "text-brass-400"
+                          : "text-white/35 group-hover:text-white/70",
+                      )}
+                    >
+                      {s.chapter}
+                    </span>
+                    <span
+                      className={cn(
+                        "relative overflow-hidden whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-300",
+                        active
+                          ? "max-w-24 text-white opacity-100"
+                          : "max-w-0 text-white/0 opacity-0",
+                      )}
+                    >
+                      {s.label}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
       </div>
     </section>
   );

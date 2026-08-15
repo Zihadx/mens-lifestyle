@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type TouchEvent,
 } from "react";
 import Link from "next/link";
@@ -31,6 +32,12 @@ interface HeroSlide {
   titleAccent: string;
   description: string;
   image: string;
+  /**
+   * Crop focal point per breakpoint, as a CSS background-position value.
+   * Tune these per photo — center is rarely right once the hero goes
+   * from a tall mobile crop to a short, very wide desktop crop.
+   */
+  focal: { mobile: string; desktop: string };
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
 }
@@ -46,6 +53,7 @@ const SLIDES: HeroSlide[] = [
       "Wool-blend overcoats and blazers, cut close through the shoulder and roomy enough to layer through Dhaka's cool spell.",
     image:
       "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=1800&auto=format&fit=crop",
+    focal: { mobile: "center 20%", desktop: "center 15%" },
     primaryCta: { label: "Shop Outerwear", href: "/shop/category/jackets" },
     secondaryCta: { label: "View Lookbook", href: "/shop" },
   },
@@ -58,9 +66,10 @@ const SLIDES: HeroSlide[] = [
     description:
       "Breathable cottons and linens finished with mother-of-pearl buttons — built to survive a Dhaka afternoon, not just look good in it.",
     image:
-      "https://images.unsplash.com/photo-1603394151492-5e9b974b090b?q=80&w=1800&auto=format&fit=crop",
-    primaryCta: { label: "Shop Shirting", href: "/shop/category/shirts" },
+      "https://i.ibb.co.com/VcBSScKQ/vero-banner-1.jpg",
+    focal: { mobile: "center 25%", desktop: "center 20%" },
     secondaryCta: { label: "View Offers", href: "/shop/offers" },
+    primaryCta: { label: "Shop Shirting", href: "/shop/category/shirts" },
   },
   {
     id: "off-duty",
@@ -71,7 +80,8 @@ const SLIDES: HeroSlide[] = [
     description:
       "Polos and easy trousers for the hours between meetings — no compromise on cut, cloth, or how it wears by evening.",
     image:
-      "https://images.unsplash.com/photo-1548454782-15b189d129ab?q=80&w=1800&auto=format&fit=crop",
+      "https://i.ibb.co.com/tRpfvzH/vero-banner-2.jpg",
+    focal: { mobile: "center 22%", desktop: "center 18%" },
     primaryCta: { label: "Shop Off-Duty", href: "/shop/category/polos" },
     secondaryCta: { label: "Shop All", href: "/shop" },
   },
@@ -84,7 +94,8 @@ const SLIDES: HeroSlide[] = [
     description:
       "Panjabi and eveningwear tailored for weddings and Eid — heirloom fabric with a modern, unfussy fit.",
     image:
-      "https://images.unsplash.com/photo-1546572797-e8c933a75a1f?q=80&w=1800&auto=format&fit=crop",
+      "https://i.ibb.co.com/FkGd2bqH/vero-banner-4.jpg",
+    focal: { mobile: "center 18%", desktop: "center 12%" },
     primaryCta: { label: "Shop Panjabi", href: "/shop/category/panjabi" },
     secondaryCta: { label: "New Arrivals", href: "/shop/new-arrivals" },
   },
@@ -143,8 +154,12 @@ export function HeroSection() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      {/* Photography — crossfaded with a slow, continuous drift */}
-      <div className="absolute inset-0">
+      {/* Photography — crossfaded with a slow, continuous drift.
+          min-h uses clamp() so height scales smoothly with viewport
+          instead of jumping between three fixed breakpoints — that
+          jump is what produced an awkward, very-wide/very-short crop
+          band at in-between desktop widths. */}
+      <div className="absolute inset-0 min-h-[clamp(520px,78svh,900px)]">
         <AnimatePresence initial={false}>
           <motion.div
             key={slide.id}
@@ -156,14 +171,19 @@ export function HeroSection() {
           >
             <div
               className={cn(
-                "absolute inset-0 bg-cover bg-center",
+                "absolute inset-0 bg-cover bg-no-repeat",
+                "bg-[position:var(--focal-mobile)] lg:bg-[position:var(--focal-desktop)]",
                 !prefersReducedMotion && "animate-hero-zoom",
               )}
-              style={{
-                backgroundImage: `url(${slide.image})`,
-                animationDuration: `${AUTOPLAY_MS + 800}ms`,
-                animationPlayState: paused ? "paused" : "running",
-              }}
+              style={
+                {
+                  backgroundImage: `url(${slide.image})`,
+                  "--focal-mobile": slide.focal.mobile,
+                  "--focal-desktop": slide.focal.desktop,
+                  animationDuration: `${AUTOPLAY_MS + 800}ms`,
+                  animationPlayState: paused ? "paused" : "running",
+                } as CSSProperties
+              }
             />
           </motion.div>
         </AnimatePresence>
@@ -246,8 +266,10 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="container relative flex min-h-150 flex-col justify-end gap-6 pb-16 pt-10 sm:min-h-170 sm:pb-24 lg:min-h-195 lg:pr-32 xl:pr-40">
+      {/* Content — height matches the photography layer above so
+          text never sits in a taller/shorter box than the image it's
+          layered on. */}
+      <div className="container relative flex min-h-[clamp(520px,78svh,900px)] flex-col justify-end gap-6 pb-16 pt-10 sm:pb-24 lg:pr-32 xl:pr-40">
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.div
             key={slide.id}

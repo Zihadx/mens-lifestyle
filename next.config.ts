@@ -2,27 +2,41 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      // ImgBB uploaded images
+      // Supabase Storage
+      {
+        protocol: "https",
+        hostname: "czxbnofeqcqgsfbjjqge.supabase.co",
+        pathname: "/storage/v1/object/**",
+      },
+
+      // ImgBB
       {
         protocol: "https",
         hostname: "i.ibb.co",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ibb.co.com",
+        pathname: "/**",
       },
 
-      // Other common image/CDN hosts
+      // Other image hosts
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "images.pexels.com",
+        pathname: "/**",
       },
-
-      // Allow any HTTPS image host
       {
         protocol: "https",
-        hostname: "**",
-      },
+        hostname: "czxbnofeqcqgsfbjjqge.supabase.co",
+        pathname: "/storage/v1/object/public/zyqo/**",
+      }
     ],
   },
 };

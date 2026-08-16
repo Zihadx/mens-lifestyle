@@ -1,3 +1,4 @@
+
 import {
   Truck,
   ShieldCheck,
@@ -40,15 +41,13 @@ const TRUST_ITEMS = [
   },
 ];
 
-export function TrustSection() {
+export async function TrustSection() {
+
   return (
     <section className="border-y border-border bg-background">
+      {/* Trust Items */}
       <div className="container">
-        {/* =========================================================
-            MOBILE
-            1 column — maximum readability
-            ========================================================= */}
-
+        {/* MOBILE */}
         <ul
           role="list"
           className="divide-y divide-border sm:hidden"
@@ -59,7 +58,6 @@ export function TrustSection() {
                 key={title}
                 className="group flex min-h-25 items-center gap-4 py-5"
               >
-                {/* Icon */}
                 <div className="flex size-10 shrink-0 items-center justify-center">
                   <Icon
                     className="size-5 text-foreground/50 transition-colors duration-300 group-hover:text-accent"
@@ -67,7 +65,6 @@ export function TrustSection() {
                   />
                 </div>
 
-                {/* Content */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
                     <p className="text-sm font-medium tracking-tight text-foreground">
@@ -88,11 +85,7 @@ export function TrustSection() {
           )}
         </ul>
 
-        {/* =========================================================
-            SMALL TABLET
-            2 columns
-            ========================================================= */}
-
+        {/* SMALL TABLET */}
         <ul
           role="list"
           className="hidden sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y sm:divide-border md:hidden"
@@ -109,7 +102,6 @@ export function TrustSection() {
                   index >= 4 ? "pb-0" : "",
                 ].join(" ")}
               >
-                {/* Top */}
                 <div className="flex items-center justify-between">
                   <Icon
                     className="size-5 text-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-accent"
@@ -121,7 +113,6 @@ export function TrustSection() {
                   </span>
                 </div>
 
-                {/* Content */}
                 <div className="mt-6">
                   <p className="text-[13px] font-medium tracking-tight text-foreground">
                     {title}
@@ -136,11 +127,7 @@ export function TrustSection() {
           )}
         </ul>
 
-        {/* =========================================================
-            TABLET
-            3 columns
-            ========================================================= */}
-
+        {/* TABLET */}
         <ul
           role="list"
           className="hidden md:grid md:grid-cols-3 md:divide-x md:divide-y md:divide-border lg:hidden"
@@ -158,7 +145,6 @@ export function TrustSection() {
                   index >= 3 ? "md:pb-0" : "",
                 ].join(" ")}
               >
-                {/* Top */}
                 <div className="flex items-center justify-between">
                   <Icon
                     className="size-5 text-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-accent"
@@ -170,7 +156,6 @@ export function TrustSection() {
                   </span>
                 </div>
 
-                {/* Content */}
                 <div className="mt-8">
                   <p className="text-[13px] font-medium tracking-tight text-foreground">
                     {title}
@@ -185,11 +170,7 @@ export function TrustSection() {
           )}
         </ul>
 
-        {/* =========================================================
-            DESKTOP
-            6-column editorial layout
-            ========================================================= */}
-
+        {/* DESKTOP */}
         <ul
           role="list"
           className="hidden lg:grid lg:grid-cols-6 lg:divide-x lg:divide-border"
@@ -207,7 +188,6 @@ export function TrustSection() {
                   index === TRUST_ITEMS.length - 1 ? "lg:pr-0" : "",
                 ].join(" ")}
               >
-                {/* Top */}
                 <div className="flex items-center justify-between">
                   <Icon
                     className="size-5 text-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-accent"
@@ -219,7 +199,6 @@ export function TrustSection() {
                   </span>
                 </div>
 
-                {/* Content */}
                 <div className="mt-8">
                   <p className="text-[13px] font-medium tracking-tight text-foreground">
                     {title}
@@ -234,6 +213,7 @@ export function TrustSection() {
           )}
         </ul>
       </div>
+
     </section>
   );
 }

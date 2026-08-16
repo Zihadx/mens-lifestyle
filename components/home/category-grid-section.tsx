@@ -3,9 +3,32 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { categories } from "@/data/categories";
+import { createClient } from "@/lib/supabase/server";
 
-export function CategoryGridSection() {
-  const featured = categories.filter((c) => c.isFeatured).slice(0, 5);
+export async function CategoryGridSection() {
+  const supabase = await createClient();
+
+  const { data: ProductCategories, error } = await supabase
+    .from("product-category")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+  }
+
+  const categories =
+    ProductCategories?.filter((category) => category.isFeatured)
+      .slice(0, 5)
+      .map((category) => ({
+        ...category,
+        imageUrl: category.imageUrl
+          ? supabase.storage.from("zyqo").getPublicUrl(category.imageUrl).data
+              .publicUrl
+          : null,
+      })) ?? [];
+
+  // console.log("CATEGORY IMAGES:", categories);=====================
 
   return (
     <section className="relative overflow-hidden border-y border-border/60 bg-background">
@@ -20,11 +43,7 @@ export function CategoryGridSection() {
               </span>
             </div>
 
-            <SectionHeading
-              eyebrow=""
-              title="Find your fit"
-              className="mb-0"
-            />
+            <SectionHeading eyebrow="" title="Find your fit" className="mb-0" />
           </div>
 
           <div className="max-w-xs lg:pb-2">
@@ -37,7 +56,7 @@ export function CategoryGridSection() {
 
         {/* Editorial category layout */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12 lg:gap-4">
-          {featured.map((category, index) => {
+          {categories?.map((category, index) => {
             /*
              * Editorial asymmetric layout:
              * 01 = large hero
@@ -63,7 +82,7 @@ export function CategoryGridSection() {
                     : "min-h-75 m:min-h-90 lg:min-h-82.5"
                 }`}
               >
-                {/* Image */}
+                {/* Image ========*/}
                 <div className="absolute inset-0 overflow-hidden">
                   {category.imageUrl && (
                     <Image

@@ -7,6 +7,7 @@ import { TrustSection } from "@/components/home/trust-section";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { InstagramSection } from "@/components/home/instagram-section";
 import { FadeIn } from "@/components/shared/fade-in";
+import UiTesting from "@/components/home/ui-testing";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -17,6 +18,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <TrustSection />
+      <UiTesting />
 
       <FadeIn>
         <CategoryGridSection />

@@ -230,7 +230,7 @@ const TEMPLATES: ProductTemplate[] = [
     sizes: ["S", "M", "L", "XL", "XXL", "3XL"],
     images: [
       "/zyqo-images/product-images/panjabi-2.jpg",
-      "/zyqo-images/product-images/panjabi-3.jpg",
+      "/zyqo-images/product-images/panjabi-1.jpg",
     ],
     tags: ["everyday", "prayer"],
     rating: 4.5,
@@ -361,7 +361,8 @@ const TEMPLATES: ProductTemplate[] = [
     colors: ["Navy", "Slate Grey"],
     sizes: ["S", "M", "L", "XL"],
     images: [
-      "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?q=80&w=1000",
+      "https://i.ibb.co.com/4n2n5h7f/Denim-Jacket-1.jpg",
+      "https://i.ibb.co.com/5x5YC8DP/Denim-Jacket.jpg",
     ],
     tags: ["denim", "jacket"],
     rating: 4.5,

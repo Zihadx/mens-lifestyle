@@ -1,21 +1,21 @@
 import type { Category } from "@/types/product";
 
 export const categories: Category[] = [
-  {
-    id: "cat_tshirts",
-    slug: "t-shirts",
-    name: "T-Shirts",
-    description: "Everyday essentials in breathable cotton — built for Dhaka's climate.",
-    imageUrl: "/zyqo-images/product-images/t-shirt.jpg",
-    isFeatured: true,
-    productCount: 3,
-  },
-  {
+ {
     id: "cat_shirts",
     slug: "shirts",
     name: "Shirts",
     description: "Formal and casual shirts, tailored fit.",
     imageUrl: "/zyqo-images/product-images/shirt.jpg",
+    isFeatured: true,
+    productCount: 3,
+  },
+   {
+    id: "cat_tshirts",
+    slug: "t-shirts",
+    name: "T-Shirts",
+    description: "Everyday essentials in breathable cotton — built for Dhaka's climate.",
+    imageUrl: "/zyqo-images/product-images/t-shirt.jpg",
     isFeatured: true,
     productCount: 3,
   },

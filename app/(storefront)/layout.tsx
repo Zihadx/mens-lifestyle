@@ -7,14 +7,18 @@ import { SearchOverlay } from "@/components/shared/search-overlay";
 import { QuickViewModal } from "@/features/product/components/quick-view-modal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
+export default function StorefrontLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <TooltipProvider delayDuration={200}>
       <AnnouncementBar />
       <SiteHeader />
       <main className="min-h-[60vh]">{children}</main>
       <SiteFooter />
-
+   
       {/* Global overlays — mounted once, controlled via Redux UI state */}
       <MobileNav />
       <CartDrawer />

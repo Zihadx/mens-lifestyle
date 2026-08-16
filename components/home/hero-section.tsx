@@ -206,7 +206,7 @@ export function HeroSection() {
       <div className="container relative z-10 flex items-center gap-3 pt-8 sm:pt-10">
         <span className="h-px w-8 bg-brass-400" />
         <span className="font-display text-xs italic tracking-[0.25em] text-white/60">
-          ZYQO — Autumn/Winter
+          Vero — Autumn/Winter
         </span>
       </div>
 

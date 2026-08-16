@@ -8,6 +8,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { store, persistor } from "@/store/index";
 import { PreviewAutoSession } from "@/components/shared/preview-auto-session";
+import { MediaNoticePopup } from "@/components/shared/media-notice-popup";
 
 /**
  * next-themes renders an inline <script> to set the theme class before
@@ -52,6 +53,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
             {children}
             <Toaster position="top-center" richColors closeButton />
             <PreviewAutoSession />
+            <MediaNoticePopup />
           </ThemeProvider>
         </QueryClientProvider>
       </PersistGate>

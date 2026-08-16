@@ -10,15 +10,7 @@ import { store, persistor } from "@/store/index";
 import { PreviewAutoSession } from "@/components/shared/preview-auto-session";
 import { MediaNoticePopup } from "@/components/shared/media-notice-popup";
 
-/**
- * next-themes renders an inline <script> to set the theme class before
- * hydration, avoiding a flash of the wrong theme. React 19 warns about any
- * <script> rendered inside a component tree — that warning is a false
- * positive here (the script still runs correctly during SSR). next-themes
- * hasn't shipped a fix, so this is the maintainer-recommended workaround:
- * filter just that one console.error message in development.
- * See: https://github.com/pacocoursey/next-themes/issues/385
- */
+
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   const originalConsoleError = console.error;
   console.error = (...args: unknown[]) => {

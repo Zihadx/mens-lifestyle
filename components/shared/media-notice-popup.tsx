@@ -56,7 +56,7 @@ export function MediaNoticePopup() {
           animate-notice-in
         "
       >
-        {/* 1-minute progress indicator */}
+        {/* ===============progress indicator =================*/}
         <div
           className="
             absolute left-0 top-0

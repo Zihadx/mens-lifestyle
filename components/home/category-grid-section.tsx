@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { categories } from "@/data/categories";
 import { createClient } from "@/lib/supabase/server";
 
 export async function CategoryGridSection() {

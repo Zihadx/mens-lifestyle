@@ -18,7 +18,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <TrustSection />
-      <UiTesting />
+      {/* <UiTesting /> */}
 
       <FadeIn>
         <CategoryGridSection />

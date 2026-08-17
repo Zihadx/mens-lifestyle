@@ -7,10 +7,20 @@ const phoneSchema = z
     "Enter a valid Bangladeshi phone number (e.g. 01712345678)",
   );
 
+const emailSchema = z
+  .string()
+  .trim()
+  .email("Enter a valid email address")
+  .max(255, "Email is too long");
+
 const passwordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters")
   .max(72, "Password must be 72 characters or fewer");
+
+// ============================================
+// Login
+// ============================================
 
 export const loginSchema = z.object({
   phone: phoneSchema,
@@ -19,12 +29,18 @@ export const loginSchema = z.object({
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
+// ============================================
+// Register
+// ============================================
+
 export const registerSchema = z.object({
   name: z
     .string()
     .trim()
     .min(2, "Enter your name")
     .max(100, "Name is too long"),
+
+  email: emailSchema,
 
   phone: phoneSchema,
 
@@ -33,14 +49,24 @@ export const registerSchema = z.object({
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
 
+// ============================================
+// Phone OTP Request
+// ============================================
+
 export const otpRequestSchema = z.object({
   phone: phoneSchema,
 });
 
 export type OtpRequestFormValues = z.infer<typeof otpRequestSchema>;
 
+// ============================================
+// Phone OTP Verification
+// ============================================
+
 export const otpVerifySchema = z.object({
-  code: z.string().regex(/^\d{6}$/, "Enter the 6-digit code"),
+  code: z
+    .string()
+    .regex(/^\d{6}$/, "Enter the 6-digit code"),
 });
 
 export type OtpVerifyFormValues = z.infer<typeof otpVerifySchema>;

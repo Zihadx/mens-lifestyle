@@ -345,7 +345,9 @@ export function RegisterForm() {
 
           {/* Create Account */}
 
-          <Button type="submit" disabled={isRegisterLoading || !captchaToken}>
+          <Button type="submit" disabled={isRegisterLoading || !captchaToken}
+          className="w-full"
+          >
             {isRegisterLoading ? "Creating account..." : "Create Account"}
           </Button>
         </form>

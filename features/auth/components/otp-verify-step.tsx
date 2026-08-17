@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ChevronLeft } from "lucide-react";
+import {
+  Turnstile,
+  type TurnstileInstance,
+} from "@marsidev/react-turnstile";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +19,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   otpVerifySchema,
@@ -38,8 +43,17 @@ export function OtpVerifyStep({
 }: OtpVerifyStepProps) {
   const supabase = createClient();
 
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isResending, setIsResending] = useState(false);
+  const turnstileRef =
+    useRef<TurnstileInstance>(null);
+
+  const [isVerifying, setIsVerifying] =
+    useState(false);
+
+  const [isResending, setIsResending] =
+    useState(false);
+
+  const [captchaToken, setCaptchaToken] =
+    useState<string | null>(null);
 
   const form = useForm<OtpVerifyFormValues>({
     resolver: zodResolver(otpVerifySchema),
@@ -53,29 +67,38 @@ export function OtpVerifyStep({
   // Verify OTP
   // ============================================
 
-  const onSubmit = async (values: OtpVerifyFormValues) => {
+  const onSubmit = async (
+    values: OtpVerifyFormValues,
+  ) => {
     setIsVerifying(true);
 
     try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        email,
-        token: values.code,
-        type: "email",
-      });
+      const { data, error } =
+        await supabase.auth.verifyOtp({
+          email,
+          token: values.code,
+          type: "email",
+        });
 
       if (error) {
-        console.error("OTP verification error:", error);
+        console.error(
+          "OTP verification error:",
+          error,
+        );
 
         form.setError("code", {
           message:
-            error.message || "That verification code is invalid.",
+            error.message ||
+            "That verification code is invalid.",
         });
 
         return;
       }
 
       if (!data.session) {
-        console.error("OTP verified but no session returned.");
+        console.error(
+          "OTP verified but no session returned.",
+        );
 
         toast.error(
           "Email verified, but we couldn't create your session.",
@@ -84,11 +107,16 @@ export function OtpVerifyStep({
         return;
       }
 
-      toast.success("Email verified successfully.");
+      toast.success(
+        "Verification successful.",
+      );
 
       onVerified();
     } catch (error) {
-      console.error("OTP verification failed:", error);
+      console.error(
+        "OTP verification failed:",
+        error,
+      );
 
       toast.error(
         "Something went wrong while verifying your email.",
@@ -103,38 +131,83 @@ export function OtpVerifyStep({
   // ============================================
 
   const handleResend = async () => {
-    if (isResending) return;
+    if (isResending) {
+      return;
+    }
+
+    if (!captchaToken) {
+      toast.error(
+        "Please complete the security verification first.",
+      );
+
+      return;
+    }
 
     setIsResending(true);
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
+      const token = captchaToken;
 
-        options: {
-          shouldCreateUser: false,
-        },
-      });
+      console.log(
+        "Resending OTP with fresh Turnstile token:",
+        Boolean(token),
+      );
+
+      const { error } =
+        await supabase.auth.signInWithOtp({
+          email,
+
+          options: {
+            shouldCreateUser: false,
+            captchaToken: token,
+          },
+        });
 
       if (error) {
-        console.error("Resend OTP error:", error);
+        console.error(
+          "Resend OTP error:",
+          error,
+        );
 
         toast.error(
-          error.message || "Couldn't resend verification code.",
+          error.message ||
+            "Couldn't resend verification code.",
         );
 
         return;
       }
 
-      toast.success("A new verification code has been sent.");
-    } catch (error) {
-      console.error("Resend OTP failed:", error);
+      toast.success(
+        "A new verification code has been sent.",
+      );
 
-      toast.error("Couldn't resend the code. Please try again.");
+      // ==========================================
+      // IMPORTANT
+      // Turnstile token is now consumed.
+      // ==========================================
+
+      setCaptchaToken(null);
+
+      // Reset Turnstile widget so it generates
+      // a completely new token.
+      turnstileRef.current?.reset();
+    } catch (error) {
+      console.error(
+        "Resend OTP failed:",
+        error,
+      );
+
+      toast.error(
+        "Couldn't resend the code. Please try again.",
+      );
     } finally {
       setIsResending(false);
     }
   };
+
+  // ============================================
+  // UI
+  // ============================================
 
   return (
     <div className="space-y-4">
@@ -146,6 +219,7 @@ export function OtpVerifyStep({
         className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
       >
         <ChevronLeft className="size-3.5" />
+
         Back
       </button>
 
@@ -177,7 +251,9 @@ export function OtpVerifyStep({
             name="code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Verification Code</FormLabel>
+                <FormLabel>
+                  Verification Code
+                </FormLabel>
 
                 <FormControl>
                   <Input
@@ -204,6 +280,42 @@ export function OtpVerifyStep({
         </form>
       </Form>
 
+      {/* ========================================
+          Turnstile
+      ======================================== */}
+
+      <div className="flex justify-center">
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={
+            process.env
+              .NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+          }
+          onSuccess={(token) => {
+            console.log(
+              "New Turnstile token received.",
+            );
+
+            setCaptchaToken(token);
+          }}
+          onError={(error) => {
+            console.error(
+              "Turnstile error:",
+              error,
+            );
+
+            setCaptchaToken(null);
+          }}
+          onExpire={() => {
+            console.warn(
+              "Turnstile token expired.",
+            );
+
+            setCaptchaToken(null);
+          }}
+        />
+      </div>
+
       {/* Resend */}
 
       <div className="space-y-2 text-center">
@@ -217,6 +329,9 @@ export function OtpVerifyStep({
           size="sm"
           onClick={handleResend}
           loading={isResending}
+          disabled={
+            isResending || !captchaToken
+          }
         >
           Resend code
         </Button>

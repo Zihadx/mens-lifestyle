@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
 import {
   Form,
   FormControl,
@@ -17,21 +16,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { registerSchema, type RegisterFormValues } from "@/schemas/auth.schema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useRegister } from "@/features/auth/hooks/use-auth";
-import { trackEvent } from "@/lib/analytics/track";
+import {
+  registerSchema,
+  type RegisterFormValues,
+} from "@/schemas/auth.schema";
+
 import { createClient } from "@/lib/supabase/client";
 import { OtpVerifyStep } from "./otp-verify-step";
 
-
 export function RegisterForm() {
   const router = useRouter();
-  const register = useRegister();
   const supabase = createClient();
 
   const [otpEmail, setOtpEmail] = useState<string | null>(null);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
+
+  // ============================================
+  // Registration Form
+  // ============================================
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -45,7 +50,7 @@ export function RegisterForm() {
   });
 
   // ============================================
-  // Google OAuth
+  // Google Signup
   // ============================================
 
   const handleGoogleSignup = async () => {
@@ -59,51 +64,83 @@ export function RegisterForm() {
       });
 
       if (error) {
-        console.error("Google OAuth error:", error);
+        console.error("Google signup error:", error);
 
         toast.error(
-          error.message || "Couldn't continue with Google. Try again.",
+          error.message || "Couldn't continue with Google.",
         );
       }
     } catch (error) {
-      console.error("Google OAuth error:", error);
+      console.error("Google signup error:", error);
 
-      toast.error("Something went wrong. Try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
   // ============================================
-  // Create Account + Send Email OTP
+  // Create Account
   // ============================================
 
   const onSubmit = async (values: RegisterFormValues) => {
     setIsOtpLoading(true);
 
     try {
-      const email = values.email.trim();
+      const name = values.name.trim();
+      const email = values.email.trim().toLowerCase();
+      const phone = values.phone.trim();
+      const password = values.password;
 
-      const { error } = await supabase.auth.signInWithOtp({
+      // ========================================
+      // Create Supabase Auth User
+      // ========================================
+
+      const { data, error } = await supabase.auth.signUp({
         email,
+        password,
+
         options: {
-          shouldCreateUser: true,
+          data: {
+            name,
+            phone,
+          },
         },
       });
 
       if (error) {
-        console.error("Supabase OTP error:", error);
+        console.error("Supabase signup error:", error);
 
-        toast.error(error.message);
+        if (
+          error.message.toLowerCase().includes("already registered") ||
+          error.message.toLowerCase().includes("already exists")
+        ) {
+          form.setError("email", {
+            message: "An account with this email already exists.",
+          });
+        } else {
+          toast.error(error.message);
+        }
 
         return;
       }
+
+      console.log("Supabase signup successful:", {
+        userId: data.user?.id,
+        email: data.user?.email,
+      });
+
+      // ========================================
+      // Email Verification Required
+      // ========================================
 
       setOtpEmail(email);
 
       toast.success("Verification code sent to your email.");
     } catch (error) {
-      console.error("OTP request failed:", error);
+      console.error("Registration failed:", error);
 
-      toast.error("Something went wrong. Please try again.");
+      toast.error(
+        "Something went wrong while creating your account.",
+      );
     } finally {
       setIsOtpLoading(false);
     }
@@ -119,17 +156,18 @@ export function RegisterForm() {
         email={otpEmail}
         onBack={() => setOtpEmail(null)}
         onVerified={() => {
-          sessionStorage.removeItem("pending-registration");
-
-          trackEvent("CompleteRegistration");
-
           toast.success("Account created successfully.");
 
           router.push("/account");
+          router.refresh();
         }}
       />
     );
   }
+
+  // ============================================
+  // UI
+  // ============================================
 
   return (
     <div className="space-y-6">
@@ -143,10 +181,14 @@ export function RegisterForm() {
         className="h-11 w-full gap-3 border-border bg-background font-medium transition-colors hover:bg-muted"
         onClick={handleGoogleSignup}
       >
-        <svg viewBox="0 0 24 24" className="size-5 shrink-0" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          className="size-5 shrink-0"
+          aria-hidden="true"
+        >
           <path
             fill="#4285F4"
-            d="M21.35 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.22Z"
+            d="M21.35 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 4.18-2.91 7.22-2.91Z"
           />
 
           <path
@@ -164,6 +206,7 @@ export function RegisterForm() {
             d="M12 6.17c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.22 14.63 2.28 12 2.28a9.74 9.74 0 0 0-8.7 5.39l3.24 2.53C7.31 7.89 9.46 6.17 12 6.17Z"
           />
         </svg>
+
         Continue with Google
       </Button>
 
@@ -184,7 +227,10 @@ export function RegisterForm() {
       {/* Registration Form */}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           {/* Full Name */}
 
           <FormField
@@ -279,7 +325,11 @@ export function RegisterForm() {
 
           {/* Create Account */}
 
-          <Button type="submit" className="w-full" loading={isOtpLoading}>
+          <Button
+            type="submit"
+            className="w-full"
+            loading={isOtpLoading}
+          >
             Create Account
           </Button>
         </form>

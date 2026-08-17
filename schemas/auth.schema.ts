@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// ============================================
+// Shared Schemas
+// ============================================
+
 const phoneSchema = z
   .string()
   .regex(
@@ -23,7 +27,7 @@ const passwordSchema = z
 // ============================================
 
 export const loginSchema = z.object({
-  phone: phoneSchema,
+  email: emailSchema,
   password: passwordSchema,
 });
 
@@ -50,22 +54,13 @@ export const registerSchema = z.object({
 export type RegisterFormValues = z.infer<typeof registerSchema>;
 
 // ============================================
-// Phone OTP Request
-// ============================================
-
-export const otpRequestSchema = z.object({
-  phone: phoneSchema,
-});
-
-export type OtpRequestFormValues = z.infer<typeof otpRequestSchema>;
-
-// ============================================
-// Phone OTP Verification
+// Email OTP Verification
 // ============================================
 
 export const otpVerifySchema = z.object({
   code: z
     .string()
+    .trim()
     .regex(/^\d{6}$/, "Enter the 6-digit code"),
 });
 

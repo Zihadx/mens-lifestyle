@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
 import {
   Form,
   FormControl,
@@ -17,104 +15,118 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   loginSchema,
-  otpRequestSchema,
   type LoginFormValues,
-  type OtpRequestFormValues,
 } from "@/schemas/auth.schema";
 
-import {
-  useLogin,
-  useRequestOtp,
-} from "@/features/auth/hooks/use-auth";
-
-import { OtpVerifyStep } from "@/features/auth/components/otp-verify-step";
-import { ServiceError } from "@/types/service";
+import { createClient } from "@/lib/supabase/client";
 
 export function LoginForm() {
   const router = useRouter();
+  const supabase = createClient();
 
-  const login = useLogin();
-  const requestOtp = useRequestOtp();
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
-  const [otpPhone, setOtpPhone] = useState<string | null>(null);
+  // ============================================
+  // Login Form
+  // ============================================
 
-  const passwordForm = useForm<LoginFormValues>({
+  const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+
     defaultValues: {
-      phone: "",
+      email: "",
       password: "",
     },
   });
 
-  const otpForm = useForm<OtpRequestFormValues>({
-    resolver: zodResolver(otpRequestSchema),
-    defaultValues: {
-      phone: "",
-    },
-  });
+  // ============================================
+  // Email + Password Login
+  // ============================================
 
-  function onPasswordSubmit(values: LoginFormValues) {
-    login.mutate(values, {
-      onSuccess: () => {
-        toast.success("Welcome back");
-        router.push("/account");
-      },
-      onError: (error) => {
-        const message =
-          error instanceof ServiceError
-            ? error.message
-            : "Couldn't sign you in.";
+  const onSubmit = async (values: LoginFormValues) => {
+    setIsLoginLoading(true);
 
-        passwordForm.setError("phone", {
-          message,
+    try {
+      const email = values.email.trim();
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password: values.password,
+      });
+
+      if (error) {
+        console.error("Supabase login error:", error);
+
+        form.setError("email", {
+          message: error.message || "Invalid email or password.",
         });
-      },
-    });
-  }
 
-  function onOtpRequest(values: OtpRequestFormValues) {
-    requestOtp.mutate(values.phone, {
-      onSuccess: () => setOtpPhone(values.phone),
-      onError: () => {
-        toast.error("Couldn't send a code. Try again.");
-      },
-    });
-  }
+        return;
+      }
 
-  function handleGoogleLogin() {
-    // UI only — Google OAuth will be connected later.
-    toast.info("Google sign-in will be available soon.");
-  }
+      toast.success("Welcome back!");
 
-  if (otpPhone) {
-    return (
-      <OtpVerifyStep
-        phone={otpPhone}
-        onBack={() => setOtpPhone(null)}
-        onVerified={() => router.push("/account")}
-      />
-    );
-  }
+      router.push("/account");
+      router.refresh();
+    } catch (error) {
+      console.error("Login error:", error);
+
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsLoginLoading(false);
+    }
+  };
+
+  // ============================================
+  // Google Login
+  // ============================================
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        console.error("Google login error:", error);
+
+        toast.error(
+          error.message || "Couldn't continue with Google.",
+        );
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
+  // ============================================
+  // UI
+  // ============================================
 
   return (
     <div className="space-y-6">
-      {/* Social Login */}
+      {/* ========================================
+          Google Login
+      ======================================== */}
+
       <Button
         type="button"
         variant="outline"
         className="h-11 w-full gap-3 border-border bg-background font-medium transition-colors hover:bg-muted"
         onClick={handleGoogleLogin}
       >
-        {/* Google Icon */}
         <svg
           viewBox="0 0 24 24"
           className="size-5 shrink-0"
@@ -124,14 +136,17 @@ export function LoginForm() {
             fill="#4285F4"
             d="M21.35 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.22Z"
           />
+
           <path
             fill="#34A853"
             d="M12 21.72c2.63 0 4.84-.87 6.45-2.37l-3.14-2.45c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.53A9.74 9.74 0 0 0 12 21.72Z"
           />
+
           <path
             fill="#FBBC05"
             d="M6.54 13.8a5.86 5.86 0 0 1 0-3.6V7.67H3.3a9.74 9.74 0 0 0 0 8.66l3.24-2.53Z"
           />
+
           <path
             fill="#EA4335"
             d="M12 6.17c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.22 14.63 2.28 12 2.28a9.74 9.74 0 0 0-8.7 5.39l3.24 2.53C7.31 7.89 9.46 6.17 12 6.17Z"
@@ -141,7 +156,10 @@ export function LoginForm() {
         Continue with Google
       </Button>
 
-      {/* Divider */}
+      {/* ========================================
+          Divider
+      ======================================== */}
+
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t border-border" />
@@ -149,125 +167,87 @@ export function LoginForm() {
 
         <div className="relative flex justify-center">
           <span className="bg-background px-3 text-xs text-muted-foreground">
-            Or continue with
+            Or continue with email
           </span>
         </div>
       </div>
 
-      {/* Existing Login Methods */}
-      <Tabs defaultValue="password">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="password">Password</TabsTrigger>
-          <TabsTrigger value="otp">Phone OTP</TabsTrigger>
-        </TabsList>
+      {/* ========================================
+          Email + Password Login
+      ======================================== */}
 
-        <TabsContent value="password">
-          <Form {...passwordForm}>
-            <form
-              onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
-              className="space-y-4"
-            >
-              <FormField
-                control={passwordForm.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
+          {/* Email */}
 
-                    <FormControl>
-                      <Input
-                        placeholder="01712345678"
-                        inputMode="tel"
-                        {...field}
-                      />
-                    </FormControl>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Address</FormLabel>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    inputMode="email"
+                    {...field}
+                  />
+                </FormControl>
 
-              <FormField
-                control={passwordForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Password</FormLabel>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                      <Link
-                        href="/forgot-password"
-                        className="text-xs text-accent hover:underline"
-                      >
-                        Forgot password?
-                      </Link>
-                    </div>
+          {/* Password */}
 
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Password</FormLabel>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <a
+                    href="/forgot-password"
+                    className="text-xs text-accent hover:underline"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                loading={login.isPending}
-              >
-                Sign In
-              </Button>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    {...field}
+                  />
+                </FormControl>
 
-              <p className="text-center text-xs text-muted-foreground">
-                Try a seeded phone number, e.g.{" "}
-                <span className="font-medium text-foreground">
-                  01711-223344
-                </span>{" "}
-                (any password)
-              </p>
-            </form>
-          </Form>
-        </TabsContent>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <TabsContent value="otp">
-          <Form {...otpForm}>
-            <form
-              onSubmit={otpForm.handleSubmit(onOtpRequest)}
-              className="space-y-4"
-            >
-              <FormField
-                control={otpForm.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+          {/* Submit */}
 
-                    <FormControl>
-                      <Input
-                        placeholder="01712345678"
-                        inputMode="tel"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                className="w-full"
-                loading={requestOtp.isPending}
-              >
-                Send Code
-              </Button>
-            </form>
-          </Form>
-        </TabsContent>
-      </Tabs>
+          <Button
+            type="submit"
+            className="w-full"
+            loading={isLoginLoading}
+          >
+            Sign In
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

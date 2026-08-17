@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,19 @@ export function LoginForm() {
   const router = useRouter();
   const supabase = createClient();
 
+  // ============================================
+  // Login State
+  // ============================================
+
   const [isLoginLoading, setIsLoginLoading] = useState(false);
+
+  // ============================================
+  // Cloudflare Turnstile State
+  // ============================================
+
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  const turnstileRef = useRef<any>(null);
 
   // ============================================
   // Login Form
@@ -50,18 +63,43 @@ export function LoginForm() {
   // ============================================
 
   const onSubmit = async (values: LoginFormValues) => {
+    // --------------------------------------------
+    // Require CAPTCHA verification
+    // --------------------------------------------
+
+    if (!captchaToken) {
+      toast.error("Please complete the security verification.");
+      return;
+    }
+
     setIsLoginLoading(true);
 
     try {
-      const email = values.email.trim();
+      const email = values.email.trim().toLowerCase();
+
+      // ========================================
+      // Supabase Email + Password Login
+      // ========================================
 
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password: values.password,
+
+        options: {
+          captchaToken,
+        },
       });
+
+      // ========================================
+      // Handle Login Error
+      // ========================================
 
       if (error) {
         console.error("Supabase login error:", error);
+
+        // Reset CAPTCHA after failed request
+        turnstileRef.current?.reset();
+        setCaptchaToken(null);
 
         form.setError("email", {
           message: error.message || "Invalid email or password.",
@@ -70,12 +108,32 @@ export function LoginForm() {
         return;
       }
 
+      // ========================================
+      // Login Successful
+      // ========================================
+
+      console.log("Supabase login successful:", {
+        email,
+      });
+
+      // Reset CAPTCHA after successful login
+      turnstileRef.current?.reset();
+      setCaptchaToken(null);
+
       toast.success("Welcome back!");
+
+      // ========================================
+      // Redirect to Account
+      // ========================================
 
       router.push("/account");
       router.refresh();
     } catch (error) {
       console.error("Login error:", error);
+
+      // Reset CAPTCHA after unexpected error
+      turnstileRef.current?.reset();
+      setCaptchaToken(null);
 
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -181,7 +239,9 @@ export function LoginForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4"
         >
-          {/* Email */}
+          {/* ======================================
+              Email
+          ====================================== */}
 
           <FormField
             control={form.control}
@@ -205,7 +265,9 @@ export function LoginForm() {
             )}
           />
 
-          {/* Password */}
+          {/* ======================================
+              Password
+          ====================================== */}
 
           <FormField
             control={form.control}
@@ -237,12 +299,35 @@ export function LoginForm() {
             )}
           />
 
-          {/* Submit */}
+          {/* ======================================
+              Cloudflare Turnstile Captcha
+          ====================================== */}
+
+          <div className="flex justify-center py-2">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+              onSuccess={(token) => {
+                setCaptchaToken(token);
+              }}
+              onExpire={() => {
+                setCaptchaToken(null);
+              }}
+              onError={() => {
+                setCaptchaToken(null);
+              }}
+            />
+          </div>
+
+          {/* ======================================
+              Submit
+          ====================================== */}
 
           <Button
             type="submit"
             className="w-full"
             loading={isLoginLoading}
+            disabled={isLoginLoading || !captchaToken}
           >
             Sign In
           </Button>

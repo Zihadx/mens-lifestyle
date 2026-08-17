@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+import { Turnstile } from "@marsidev/react-turnstile";
 
 import {
   Form,
@@ -19,10 +21,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  registerSchema,
-  type RegisterFormValues,
-} from "@/schemas/auth.schema";
+import { registerSchema, type RegisterFormValues } from "@/schemas/auth.schema";
 
 import { createClient } from "@/lib/supabase/client";
 import { OtpVerifyStep } from "./otp-verify-step";
@@ -32,7 +31,12 @@ export function RegisterForm() {
   const supabase = createClient();
 
   const [otpEmail, setOtpEmail] = useState<string | null>(null);
-  const [isOtpLoading, setIsOtpLoading] = useState(false);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+
+  // ============= Captcha============
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  const turnstileRef = useRef<any>(null);
 
   // ============================================
   // Registration Form
@@ -44,7 +48,6 @@ export function RegisterForm() {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
       password: "",
     },
   });
@@ -66,9 +69,7 @@ export function RegisterForm() {
       if (error) {
         console.error("Google signup error:", error);
 
-        toast.error(
-          error.message || "Couldn't continue with Google.",
-        );
+        toast.error(error.message || "Couldn't continue with Google.");
       }
     } catch (error) {
       console.error("Google signup error:", error);
@@ -82,12 +83,16 @@ export function RegisterForm() {
   // ============================================
 
   const onSubmit = async (values: RegisterFormValues) => {
-    setIsOtpLoading(true);
+    if (!captchaToken) {
+      toast.error("Please complete the security verification.");
+      return;
+    }
+
+    setIsRegisterLoading(true);
 
     try {
       const name = values.name.trim();
       const email = values.email.trim().toLowerCase();
-      const phone = values.phone.trim();
       const password = values.password;
 
       // ========================================
@@ -99,29 +104,45 @@ export function RegisterForm() {
         password,
 
         options: {
+          captchaToken,
+
           data: {
+            full_name: name,
             name,
-            phone,
           },
         },
       });
 
+      // ========================================
+      // Handle Signup Error
+      // ========================================
+
       if (error) {
         console.error("Supabase signup error:", error);
 
+        turnstileRef.current?.reset();
+        setCaptchaToken(null);
+
+        const message = error.message.toLowerCase();
+
         if (
-          error.message.toLowerCase().includes("already registered") ||
-          error.message.toLowerCase().includes("already exists")
+          message.includes("already registered") ||
+          message.includes("already exists") ||
+          message.includes("user already")
         ) {
           form.setError("email", {
             message: "An account with this email already exists.",
           });
         } else {
-          toast.error(error.message);
+          toast.error(error.message || "Couldn't create your account.");
         }
 
         return;
       }
+
+      // ========================================
+      // Signup Successful
+      // ========================================
 
       console.log("Supabase signup successful:", {
         userId: data.user?.id,
@@ -129,7 +150,14 @@ export function RegisterForm() {
       });
 
       // ========================================
-      // Email Verification Required
+      // Reset CAPTCHA
+      // ========================================
+
+      turnstileRef.current?.reset();
+      setCaptchaToken(null);
+
+      // ========================================
+      // Email Verification
       // ========================================
 
       setOtpEmail(email);
@@ -138,11 +166,12 @@ export function RegisterForm() {
     } catch (error) {
       console.error("Registration failed:", error);
 
-      toast.error(
-        "Something went wrong while creating your account.",
-      );
+      turnstileRef.current?.reset();
+      setCaptchaToken(null);
+
+      toast.error("Something went wrong while creating your account.");
     } finally {
-      setIsOtpLoading(false);
+      setIsRegisterLoading(false);
     }
   };
 
@@ -181,14 +210,10 @@ export function RegisterForm() {
         className="h-11 w-full gap-3 border-border bg-background font-medium transition-colors hover:bg-muted"
         onClick={handleGoogleSignup}
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="size-5 shrink-0"
-          aria-hidden="true"
-        >
+        <svg viewBox="0 0 24 24" className="size-5 shrink-0" aria-hidden="true">
           <path
             fill="#4285F4"
-            d="M21.35 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 4.18-2.91 7.22-2.91Z"
+            d="M21.35 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.22Z"
           />
 
           <path
@@ -206,11 +231,12 @@ export function RegisterForm() {
             d="M12 6.17c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.22 14.63 2.28 12 2.28a9.74 9.74 0 0 0-8.7 5.39l3.24 2.53C7.31 7.89 9.46 6.17 12 6.17Z"
           />
         </svg>
-
         Continue with Google
       </Button>
 
-      {/* Divider */}
+      {/* ========================================
+          Divider
+      ======================================== */}
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -224,13 +250,12 @@ export function RegisterForm() {
         </div>
       </div>
 
-      {/* Registration Form */}
+      {/* ========================================
+          Registration Form
+      ======================================== */}
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Full Name */}
 
           <FormField
@@ -277,29 +302,6 @@ export function RegisterForm() {
             )}
           />
 
-          {/* Phone */}
-
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-
-                <FormControl>
-                  <Input
-                    placeholder="01712345678"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    {...field}
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           {/* Password */}
 
           <FormField
@@ -323,17 +325,33 @@ export function RegisterForm() {
             )}
           />
 
+          {/*================= captcha ============== */}
+
+          <div className="flex justify-center py-2">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+              onSuccess={(token) => {
+                setCaptchaToken(token);
+              }}
+              onExpire={() => {
+                setCaptchaToken(null);
+              }}
+              onError={() => {
+                setCaptchaToken(null);
+              }}
+            />
+          </div>
+
           {/* Create Account */}
 
-          <Button
-            type="submit"
-            className="w-full"
-            loading={isOtpLoading}
-          >
-            Create Account
+          <Button type="submit" disabled={isRegisterLoading || !captchaToken}>
+            {isRegisterLoading ? "Creating account..." : "Create Account"}
           </Button>
         </form>
       </Form>
+
+      {/* Verification Notice */}
 
       <p className="text-center text-xs text-muted-foreground">
         We'll send a 6-digit verification code to your email.

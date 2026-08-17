@@ -1,15 +1,8 @@
 import { z } from "zod";
 
 // ============================================
-// Shared Schemas
+// Common Schemas
 // ============================================
-
-const phoneSchema = z
-  .string()
-  .regex(
-    /^01[3-9]\d{8}$/,
-    "Enter a valid Bangladeshi phone number (e.g. 01712345678)",
-  );
 
 const emailSchema = z
   .string()
@@ -20,7 +13,7 @@ const emailSchema = z
 const passwordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters")
-  .max(72, "Password must be 72 characters or fewer");
+  .max(72, "Password is too long");
 
 // ============================================
 // Login
@@ -46,22 +39,33 @@ export const registerSchema = z.object({
 
   email: emailSchema,
 
-  phone: phoneSchema,
-
   password: passwordSchema,
 });
 
 export type RegisterFormValues = z.infer<typeof registerSchema>;
 
 // ============================================
-// Email OTP Verification
+// Email OTP Request
+// ============================================
+
+export const otpRequestSchema = z.object({
+  email: emailSchema,
+});
+
+export type OtpRequestFormValues = z.infer<
+  typeof otpRequestSchema
+>;
+
+// ============================================
+// OTP Verification
 // ============================================
 
 export const otpVerifySchema = z.object({
   code: z
     .string()
-    .trim()
     .regex(/^\d{6}$/, "Enter the 6-digit code"),
 });
 
-export type OtpVerifyFormValues = z.infer<typeof otpVerifySchema>;
+export type OtpVerifyFormValues = z.infer<
+  typeof otpVerifySchema
+>;

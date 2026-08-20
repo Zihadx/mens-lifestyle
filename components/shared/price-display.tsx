@@ -4,9 +4,7 @@ import { cn } from "@/lib/utils";
 
 interface PriceDisplayProps {
   price: number;
-  compareAtPrice?: number;
-  size?: "sm" | "md" | "lg";
-  className?: string;
+  compareAtPrice?: number | null;
 }
 
 const sizeClasses = {
@@ -15,18 +13,26 @@ const sizeClasses = {
   lg: "text-2xl",
 };
 
-export function PriceDisplay({ price, compareAtPrice, size = "md", className }: PriceDisplayProps) {
-  const discount = calculateDiscountPercent(price, compareAtPrice);
+export function PriceDisplay({
+  price,
+  compareAtPrice,
+}: PriceDisplayProps) {
+  const hasComparePrice =
+    compareAtPrice !== null &&
+    compareAtPrice !== undefined &&
+    compareAtPrice > price;
 
   return (
-    <div className={cn("flex items-baseline gap-2", className)}>
-      <span className={cn("font-semibold text-foreground", sizeClasses[size])}>{formatBDT(price)}</span>
-      {discount > 0 && compareAtPrice ? (
-        <>
-          <span className="text-sm text-muted-foreground line-through">{formatBDT(compareAtPrice)}</span>
-          <span className="text-xs font-medium text-destructive">-{discount}%</span>
-        </>
-      ) : null}
+    <div className="flex items-center gap-2">
+      <span className="text-sm font-medium text-foreground">
+        ৳{price.toLocaleString()}
+      </span>
+
+      {hasComparePrice && (
+        <span className="text-xs text-muted-foreground line-through">
+          ৳{compareAtPrice.toLocaleString()}
+        </span>
+      )}
     </div>
   );
 }

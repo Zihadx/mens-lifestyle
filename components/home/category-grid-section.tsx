@@ -8,7 +8,7 @@ export async function CategoryGridSection() {
   const supabase = await createClient();
 
   const { data: ProductCategories, error } = await supabase
-    .from("product-category")
+    .from("categories")
     .select("*")
     .order("created_at", { ascending: false });
 

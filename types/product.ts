@@ -1,43 +1,72 @@
+export type Size = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "3XL" | "One Size";
+
+export interface ProductColor {
+  name: string;
+  hex: string;
+}
+
 export interface ProductImage {
-  id: number;
+  id: string;
   url: string;
   alt: string;
 }
 
 export interface ProductVariant {
-  id: number;
-
-  size: string | null;
-  color: string | null;
-
+  id: string;
+  sku: string;
+  size: Size;
+  color: ProductColor;
   stock: number;
   reservedStock: number;
+  priceOverride?: number;
 }
 
-export interface ProductRating {
+export interface ProductReviewSummary {
   average: number;
   count: number;
 }
 
+export type ProductStatus = "published" | "draft" | "archived";
+
 export interface Product {
   id: string;
-
-  name: string;
   slug: string;
-
+  name: string;
+  shortDescription: string;
+  description: string;
+  categoryId: string;
+  categorySlug: string;
+  brand: string;
+  sku: string;
   price: number;
-  compareAtPrice: number | null;
-
+  compareAtPrice?: number;
+  cost: number;
   images: ProductImage[];
-
+  colors: ProductColor[];
+  sizes: Size[];
   variants: ProductVariant[];
-
-  rating: ProductRating;
-
-  // Computed fields — NOT database columns
-  isNewArrival: boolean;
+  materials: string[];
+  careInstructions: string[];
+  tags: string[];
+  rating: ProductReviewSummary;
+  status: ProductStatus;
+  isFeatured: boolean;
   isBestSeller: boolean;
-
+  isNewArrival: boolean;
   createdAt: string;
-  shortDescription: string
+  seo: {
+    title: string;
+    description: string;
+  };
+}
+
+export interface Category {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+  parentId?: string;
+  isFeatured: boolean;
+  productCount: number;
 }
